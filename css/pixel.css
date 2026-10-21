@@ -1,0 +1,354 @@
+/* Pixel components: boxes, buttons, dialogue, HUD, sprites. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--night);
+  color: var(--paper);
+  font-family: var(--font-text);
+  font-size: var(--fs-text);
+  line-height: 1.15;
+  -webkit-font-smoothing: none;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 4px solid var(--gem);
+  outline-offset: 4px;
+}
+
+.pixel {
+  font-family: var(--font-pixel);
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
+/* Pixel box: notched corners from four outer shadows plus a top bevel. */
+.px-box {
+  background: var(--blue);
+  margin: var(--px);
+  padding: var(--s4);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    0 var(--px) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    inset 0 var(--px) 0 var(--blue-hi);
+}
+
+.px-box--paper {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    0 var(--px) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    inset 0 calc(var(--px) * -1) 0 var(--orange-hi);
+}
+
+/* Buttons: orange slab with a 4px dark bottom edge; pressing sinks it. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: var(--tap);
+  min-width: var(--tap);
+  margin: var(--px) var(--px) calc(var(--px) * 2);
+  padding: var(--s3) var(--s4);
+  border: 0;
+  border-radius: 0;
+  background: var(--orange);
+  color: var(--ink);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-s);
+  text-transform: uppercase;
+  line-height: 1.4;
+  cursor: pointer;
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--ink),
+    0 calc(var(--px) * 2) 0 var(--ink),
+    inset 0 var(--px) 0 var(--orange-hi);
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.btn:active,
+.btn.is-pressed {
+  transform: translateY(var(--px));
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--ink);
+}
+
+.btn--big {
+  font-size: var(--fs-pixel-m);
+  min-height: 64px;
+  width: calc(100% - var(--px) * 2);
+}
+
+.btn--blue {
+  background: var(--blue-hi);
+  color: var(--paper);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--blue),
+    0 calc(var(--px) * 2) 0 var(--ink),
+    inset 0 var(--px) 0 var(--gem);
+}
+
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Text field dressed as a pixel input. */
+.px-input {
+  display: block;
+  width: calc(100% - var(--px) * 2);
+  min-height: 56px;
+  margin: var(--px);
+  padding: var(--s2) var(--s3);
+  border: 0;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-m);
+  text-transform: uppercase;
+  caret-color: var(--orange);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--paper),
+    0 var(--px) 0 var(--paper),
+    calc(var(--px) * -1) 0 0 var(--paper),
+    var(--px) 0 0 var(--paper);
+}
+
+.px-input::placeholder {
+  color: var(--blue-hi);
+}
+
+/* Sprites are drawn as SVG rects at 1 unit per pixel, so they stay crisp. */
+.sprite {
+  display: block;
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
+
+/* Dialogue box: pinned to the bottom with Ray's portrait on the left. */
+.dialogue {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 20;
+  width: min(100% - var(--s4), var(--max-w) - var(--s4));
+  transform: translateX(-50%);
+  margin: 0 0 calc(var(--s3) + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: var(--s3);
+  align-items: start;
+  min-height: 140px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dialogue__portrait {
+  width: 64px;
+  height: 64px;
+  background: var(--night);
+  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 0 0 var(--px) var(--blue-hi);
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.dialogue__name {
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-s);
+  color: var(--orange-hi);
+  margin: 0 0 var(--s2);
+}
+
+.dialogue__text {
+  margin: 0;
+  min-height: 3.45em;
+  font-size: var(--fs-text);
+  white-space: pre-wrap;
+}
+
+.dialogue__more {
+  position: absolute;
+  right: var(--s3);
+  bottom: var(--s2);
+  font-size: var(--fs-text);
+  color: var(--orange);
+  visibility: hidden;
+}
+
+.dialogue.is-done .dialogue__more {
+  visibility: visible;
+  animation: blink 0.8s steps(1, end) infinite;
+}
+
+.dialogue__choices {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.dialogue__choices:empty {
+  display: none;
+}
+
+/* HUD: one thin pixel bar at the top. */
+.hud {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  min-height: var(--tap);
+  padding: var(--s2) var(--s3);
+  padding-top: calc(var(--s2) + env(safe-area-inset-top));
+  background: var(--ink);
+  border-bottom: var(--px) solid var(--blue-hi);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-s);
+}
+
+.hud__sep {
+  color: var(--blue-hi);
+}
+
+.hud__bars {
+  letter-spacing: -2px;
+  color: var(--gem);
+}
+
+.hud__bars .off {
+  color: var(--blue-hi);
+}
+
+.hud__sound {
+  min-width: var(--tap);
+  min-height: var(--tap);
+  margin: calc(var(--s2) * -1) calc(var(--s3) * -1) calc(var(--s2) * -1) 0;
+  border: 0;
+  background: none;
+  color: var(--orange-hi);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-m);
+  cursor: pointer;
+}
+
+.hud__sound[aria-pressed="false"] {
+  color: var(--blue-hi);
+  text-decoration: line-through;
+}
+
+/* Frame-based motion only. */
+@keyframes blink {
+  50% { visibility: hidden; }
+}
+
+@keyframes spin {
+  0% { transform: scaleX(1); }
+  25% { transform: scaleX(0.5); }
+  50% { transform: scaleX(-1); }
+  75% { transform: scaleX(-0.5); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(calc(var(--px) * -1)); }
+}
+
+.blink {
+  animation: blink 1s steps(1, end) infinite;
+}
+
+.spin {
+  animation: spin 1.2s steps(4, end) infinite;
+}
+
+.bob {
+  animation: bob 1s steps(2, end) infinite;
+}
+
+/* Checkerboard wipe: 4 frames of a growing 8x8 grid between screens. */
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(14, 1fr);
+}
+
+.wipe span {
+  background: var(--ink);
+  transform: scale(0);
+}
+
+.wipe.is-in span {
+  animation: wipe-in calc(var(--frame) * 4) steps(4, end) forwards;
+}
+
+.wipe.is-in span:nth-child(odd) {
+  animation-delay: calc(var(--frame) * -1);
+}
+
+@keyframes wipe-in {
+  to { transform: scale(1); }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  .spin,
+  .bob,
+  .dialogue.is-done .dialogue__more {
+    animation: none;
+  }
+
+  .wipe {
+    display: none;
+  }
+}

@@ -1,0 +1,55 @@
+/* 8-bit Bucknell design tokens. Eight colors, two fonts, nothing else. */
+
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("../assets/fonts/PressStart2P.woff2") format("woff2");
+  font-display: block;
+}
+
+@font-face {
+  font-family: "VT323";
+  src: url("../assets/fonts/VT323.woff2") format("woff2");
+  font-display: block;
+}
+
+:root {
+  /* Palette */
+  --night: #001E3A;
+  --blue: #003865;
+  --blue-hi: #2F6DA3;
+  --orange: #E87722;
+  --orange-hi: #FFB26B;
+  --paper: #FFF4E0;
+  --ink: #0B0F1A;
+  --gem: #6FE3FF;
+
+  /* Ray's fur: sprite-only browns, never used for UI */
+  --fur-dk: #3B2414;
+  --fur: #6B4426;
+  --fur-hi: #9C6B3F;
+
+  /* Type */
+  --font-pixel: "Press Start 2P", monospace;
+  --font-text: "VT323", monospace;
+  --fs-pixel-s: 12px;
+  --fs-pixel-m: 16px;
+  --fs-pixel-l: 24px;
+  --fs-pixel-xl: 32px;
+  --fs-text: 24px;
+  --fs-text-l: 28px;
+
+  /* Spacing: everything snaps to a 4px grid */
+  --px: 4px;
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s6: 24px;
+  --s8: 32px;
+
+  --tap: 48px;
+  --max-w: 480px;
+
+  /* Motion */
+  --frame: 120ms;
+}
