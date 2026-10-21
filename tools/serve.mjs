@@ -1,7 +1,4 @@
-// Dev-only static server: node tools/serve.mjs [port]
-// Also fakes the email Apps Script at POST /__mock-mail by running the real
-// tools/email-apps-script.gs with stand-ins for Google's services. The last
-// email it "sent" is at /__mock-mail/last.html.
+// Dev server with a mock mailer. See README.md.
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
@@ -22,9 +19,7 @@ const types = {
   ".woff2": "font/woff2",
 };
 
-// ---------- mock mailer ----------
-
-const cache = new Map(); // shared across requests so the rate limit is testable
+const cache = new Map();
 let lastHtml = "<p>No mail sent yet.</p>";
 
 async function mockMail(body) {
@@ -78,8 +73,6 @@ async function mockMail(body) {
   }
   return out.text;
 }
-
-// ---------- server ----------
 
 function readBody(req) {
   return new Promise((res, rej) => {

@@ -1,6 +1,3 @@
-// "Your page in Ray's book": a 1080x1920 collage of every gem photo, drawn on
-// a canvas. Used by SAVE PAGE (share/download) and EMAIL MY PAGE.
-
 import { GEMS } from "./data/gems.js";
 import * as store from "./store.js";
 import { loadImage } from "./photo.js";
@@ -29,11 +26,10 @@ export function stamp(iso) {
     .toUpperCase();
 }
 
-// Same stars every time, so the page looks designed rather than noisy.
+// Seeded so the stars are the same every time.
 function stars(ctx, c) {
   let seed = 1846;
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  // Keep the title and footer text clear.
   const clear = (x, y) => (x > 220 && x < 860 && (y < 270 || y > H - 110));
   for (let i = 0; i < 90; i++) {
     const color = rnd() < 0.4 ? c.blueHi : c.paper;
@@ -58,7 +54,7 @@ function centerText(ctx, text, y, font, color, shadow) {
   ctx.fillText(text, W / 2, y);
 }
 
-// Draw `img` to fill the box, cropping the overflow (CSS object-fit: cover).
+// Like object-fit: cover.
 function cover(ctx, img, x, y, w, h) {
   const iw = img.naturalWidth || img.width;
   const ih = img.naturalHeight || img.height;
@@ -91,7 +87,6 @@ export async function renderPage() {
   ctx.fillRect(0, 0, W, H);
   stars(ctx, c);
 
-  // Header: Ray, the logo, the player's name, a gem.
   paintRay(ctx, 48, 56, 6, Object.keys(p.found).length === GEMS.length ? "proud" : "happy");
   paintGem(ctx, W - 48 - 80, 92, 8);
   centerText(ctx, "HIDDEN", 52, `52px ${PIXEL}`, c.paper, c.blueHi);
@@ -103,7 +98,6 @@ export async function renderPage() {
   ctx.fillStyle = c.gem;
   ctx.fillText(who, W / 2, 222);
 
-  // 3 x 4 grid of polaroids.
   const cols = 3;
   const margin = 48;
   const gap = 24;
@@ -134,7 +128,6 @@ export async function renderPage() {
     ctx.translate(-cellW / 2, -cellH / 2);
 
     if (f) {
-      // Polaroid with a hard pixel shadow and a strip of colored tape.
       ctx.fillStyle = c.blueHi;
       ctx.fillRect(8, 8, cellW, cellH);
       ctx.fillStyle = c.ink;
@@ -150,7 +143,6 @@ export async function renderPage() {
       ctx.fillStyle = tape;
       ctx.fillRect(cellW / 2 - 42, -12, 84, 22);
     } else {
-      // Empty slot: a dashed stone outline, like the book.
       ctx.strokeStyle = c.stone;
       ctx.lineWidth = 6;
       ctx.setLineDash([18, 12]);
@@ -177,10 +169,9 @@ export async function renderPage() {
     ctx.restore();
   });
 
-  // Footer.
   const n = Object.keys(p.found).length;
   centerText(ctx, `GEMS ${pad2(n)}/${GEMS.length}`, H - 92, `24px ${PIXEL}`, c.orange, c.ink);
-  centerText(ctx, "© 1846 RAY BUCKNELL", H - 48, `14px ${PIXEL}`, c.blueHi);
+  centerText(ctx, "RAYDAR", H - 48, `14px ${PIXEL}`, c.gem);
 
   return new Promise((res) => canvas.toBlob(res, "image/jpeg", 0.82));
 }
@@ -190,7 +181,6 @@ export function pageFileName() {
   return `rays-book-${name}.jpg`;
 }
 
-// SAVE PAGE: share sheet where supported (phones), download otherwise.
 export async function savePage(blob) {
   const file = new File([blob], pageFileName(), { type: "image/jpeg" });
   if (navigator.canShare?.({ files: [file] })) {

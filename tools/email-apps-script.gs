@@ -1,24 +1,7 @@
-/**
- * Ray's mailbox: emails a player their page of Ray's book.
- *
- * Deploy (about 5 minutes):
- *  1. Sign in with the Google account the email should come from. A dedicated
- *     Gmail ("Ray Bucknell") is best: players see its address.
- *  2. script.google.com → New project → paste this whole file over Code.gs.
- *  3. Project Settings → Script properties → add SITE_URL = the game's URL
- *     (for example https://<you>.github.io/hiddengems-hackathon/).
- *  4. Deploy → New deployment → type "Web app". Execute as: Me.
- *     Who has access: Anyone. Approve the Gmail permission.
- *  5. Copy the URL ending in /exec into DEPLOYED_MAILER in js/config.js.
- *  After editing this file later: Deploy → Manage deployments → edit → New version.
- *
- * The client sends structured data and one JPEG; this script builds the HTML,
- * escapes everything, and stores nothing (the rate limit keeps only a hash of
- * the address in a 6-hour cache).
- */
+// Emails a player their page of Ray's book. Setup: see README.md.
 
-var MAX_PER_ADDRESS = 3;        // sends per address...
-var WINDOW_SECONDS = 6 * 60 * 60; // ...per 6 hours
+var MAX_PER_ADDRESS = 3;
+var WINDOW_SECONDS = 6 * 60 * 60;
 var MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 
 var C = {
@@ -66,7 +49,6 @@ function doPost(e) {
   }
 }
 
-// Validate everything. Returns null if anything is off.
 function parse_(raw) {
   if (!raw || raw.length > 6 * 1024 * 1024) return null;
   var d;
@@ -117,7 +99,7 @@ function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-// The email. Tables + inline styles so it holds up in Gmail, Outlook and iCloud.
+// Tables and inline styles for Gmail and Outlook.
 function buildEmail_(d, site) {
   var found = d.gems.filter(function (g) { return g.found; }).length;
   var all = found >= d.total;
@@ -131,7 +113,6 @@ function buildEmail_(d, site) {
 
   var safeSite = /^https:\/\//.test(site) ? site : "";
 
-  // Score pips: one square per gem.
   var pips = d.gems.map(function (g) {
     return '<td width="14" height="14" style="width:14px;height:14px;background:' + (g.found ? C.gem : C.blueHi) +
       ';font-size:0;line-height:0;">&nbsp;</td><td width="6" style="width:6px;font-size:0;">&nbsp;</td>';
@@ -175,7 +156,7 @@ function buildEmail_(d, site) {
     '<tr><td align="center" style="padding:16px 0 8px;">' +
     '<div style="font:bold 40px ' + MONO + ';letter-spacing:8px;color:' + C.paper + ';text-shadow:4px 4px 0 ' + C.blueHi + ';">HIDDEN</div>' +
     '<div style="font:bold 52px ' + MONO + ';letter-spacing:10px;color:' + C.orange + ';text-shadow:4px 4px 0 ' + C.ink + ';">GEMS</div>' +
-    '<div style="font:bold 13px ' + MONO + ';letter-spacing:4px;color:' + C.gem + ';padding-top:8px;">RAY BUCKNELL\'S HUNT</div>' +
+    '<div style="font:bold 13px ' + MONO + ';letter-spacing:4px;color:' + C.gem + ';padding-top:8px;">RAYDAR</div>' +
     '</td></tr>' +
 
     // Ray's note
@@ -205,7 +186,7 @@ function buildEmail_(d, site) {
     // Button + footer
     '<tr><td align="center" style="padding:20px 0 8px;">' + button + '</td></tr>' +
     '<tr><td align="center" style="padding:24px 8px 8px;font:12px/1.6 ' + MONO + ';color:' + C.blueHi + ';">' +
-    '&copy; 1846 RAY BUCKNELL<br>You asked Ray to mail you your page from Hidden Gems. He won\'t write again unless you ask.' +
+    'RAYDAR &middot; RAY BUCKNELL&#39;S HUNT<br>You asked Ray to mail you your page from Raydar. He won\'t write again unless you ask.' +
     '</td></tr>' +
 
     '</table></td></tr></table></body></html>';

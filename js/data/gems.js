@@ -1,5 +1,4 @@
-// All game content. Single source of truth for the app, the printed cards
-// and the answer key. Text comes from GAME-PLAN.md; don't reword it here.
+// All game content. Copy text verbatim from GAME-PLAN.md.
 
 export const ACTS = {
   1: "BEFORE RAY HAD A NAME",
@@ -26,7 +25,7 @@ export const GEMS = [
     ],
     code: "CHARTER",
     token: "k7q2",
-    geo: null, // fill in on the Thursday survey walk (?survey=1)
+    geo: null,
     memory: [
       { text: "This was once the whole university. One building, 1849.", mood: "wistful" },
       { text: "They called it the University at Lewisburg.", mood: "wistful" },
@@ -37,7 +36,7 @@ export const GEMS = [
       "You made it. In 1849, this was everything: classrooms, dreams, a lot of mud. They didn't call it Bucknell yet. Give them 37 years.",
   },
 
-  // Stubs: content gets ported from GAME-PLAN.md on Wednesday.
+  // Stubs: content not ported yet.
   { id: "bucknell", n: 2, act: 1, name: "Bucknell Hall", code: "GASKING", stub: true },
   { id: "hunt", n: 3, act: 2, name: "Hunt Hall", code: "PERFUME", stub: true },
   { id: "oldart", n: 4, act: 2, name: "Old Art Building", code: "MILLRUN", stub: true },

@@ -1,6 +1,1 @@
-*-PLAN.md
-CLAUDE.md
-GEMINI.md
-CODEX.md
-.claude
-.vscode
+.agents/

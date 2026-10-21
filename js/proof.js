@@ -1,11 +1,9 @@
-// Proof: decode the QR on Ray's card from a photo, or check a typed code.
-
 import { toCanvas, sizeOf } from "./photo.js";
 import { byId } from "./data/gems.js";
 
 let jsQRReady = null;
 
-// jsQR ships as UMD, so load it as a classic script the first time it's needed.
+// jsQR is UMD, so it loads as a classic script.
 function loadJsQR() {
   if (window.jsQR) return Promise.resolve(window.jsQR);
   jsQRReady ??= new Promise((res, rej) => {
@@ -20,8 +18,7 @@ function loadJsQR() {
 
 export const preload = () => loadJsQR().catch(() => {});
 
-// A card held up in front of a building is small in the frame, so try the
-// full photo at 1600px, then the center crop, then the whole thing at 1000px.
+// The card is small in the frame: try full, center crop, then smaller.
 export async function scan(img) {
   const jsQR = await loadJsQR();
   const { w, h } = sizeOf(img);
@@ -37,7 +34,7 @@ export async function scan(img) {
     const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const hit = jsQR(data, canvas.width, canvas.height, { inversionAttempts: "attemptBoth" });
     if (hit?.data) return hit.data;
-    await new Promise((r) => setTimeout(r)); // let the "scanning" frame paint
+    await new Promise((r) => setTimeout(r)); // let the UI paint
   }
   return null;
 }
@@ -57,7 +54,6 @@ const norm = (s) => String(s).toUpperCase().replace(/[^A-Z]/g, "");
 
 export const codeOk = (gem, typed) => norm(typed) === norm(gem.code);
 
-// Which gem's code is this, if any? Lets Ray say "that's the wrong card."
 export const codeOwner = (typed, gems) => gems.find((g) => norm(g.code) === norm(typed));
 
 export function cardUrl(gem, base = location.origin + location.pathname) {

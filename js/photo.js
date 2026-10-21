@@ -1,7 +1,4 @@
-// Photo decode, upright rotation and resizing via canvas.
-
-// Decode a File/Blob into an upright bitmap. createImageBitmap honors EXIF
-// orientation in current Safari and Chrome; <img> is the fallback.
+// createImageBitmap applies EXIF orientation; <img> is the fallback.
 export async function loadImage(file) {
   if ("createImageBitmap" in window) {
     try {
@@ -25,7 +22,6 @@ export const sizeOf = (img) => ({
   h: img.naturalHeight || img.height,
 });
 
-// Draw (a crop of) the image so its long side is at most `max` px.
 export function toCanvas(img, max, crop) {
   const { w, h } = sizeOf(img);
   const c = crop || { x: 0, y: 0, w, h };
@@ -39,7 +35,6 @@ export function toCanvas(img, max, crop) {
   return canvas;
 }
 
-// The keepsake: 1280px on the long side, JPEG 0.82.
 export function toKeepsake(img) {
   const canvas = toCanvas(img, 1280);
   return new Promise((res) => canvas.toBlob(res, "image/jpeg", 0.82));

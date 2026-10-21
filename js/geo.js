@@ -1,6 +1,4 @@
-// GPS as a soft "you're close" signal, shown as phone signal bars. Never a gate.
-
-const KEY = "hg.geo"; // "yes" | "no" once the player has answered Ray
+const KEY = "hg.geo";
 
 export function distance(a, b) {
   const R = 6371000;
@@ -42,7 +40,7 @@ export function setChoice(v) {
 
 export const supported = () => "geolocation" in navigator;
 
-// Calls onUpdate({meters, bars}) as the player moves. Returns a stop function.
+// Returns a stop function.
 export function watch(geo, onUpdate, onError) {
   if (!geo || !supported()) return () => {};
   const id = navigator.geolocation.watchPosition(
@@ -56,7 +54,6 @@ export function watch(geo, onUpdate, onError) {
   return () => navigator.geolocation.clearWatch(id);
 }
 
-// One-shot fix for the missing-card fallback.
 export function here() {
   return new Promise((res, rej) => {
     if (!supported()) return rej(new Error("unsupported"));

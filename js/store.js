@@ -1,5 +1,4 @@
-// Progress + photos in IndexedDB via idb-keyval. Falls back to memory if
-// IndexedDB is unavailable (some private modes), and says so once.
+// Falls back to memory when IndexedDB is unavailable.
 
 import * as idb from "../vendor/idb-keyval-6.2.1.js";
 
@@ -19,10 +18,10 @@ const memoryBackend = {
 
 const blank = () => ({
   name: "",
-  email: "", // optional; only sent when the player taps EMAIL MY PAGE
+  email: "",
   emailAsked: false,
-  found: {}, // id -> { at: ISO time, method: "qr" | "code" | "gps" | "photo" | "skip" }
-  verified: {}, // id -> true when a QR deep link proved the card before the photo
+  found: {}, // id -> { at, method }
+  verified: {}, // id -> true after a card deep link
   seenIntro: false,
 });
 

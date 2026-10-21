@@ -1,5 +1,3 @@
-// The ♪ button and its sound panel: music play/pause, skip, volume, SFX.
-
 import * as music from "./music.js";
 import { sfx, unlock, isOn as sfxOn, setOn as setSfx } from "./sfx.js";
 import { icon } from "./sprites.js";
@@ -96,7 +94,7 @@ function onKey(e) {
   if (e.key === "Escape") close();
 }
 
-// Taps inside the panel stop propagating, so any click that gets here is outside.
+// Panel clicks stop propagating, so this only sees outside clicks.
 const onOutside = () => close();
 
 export function open(from) {
@@ -117,7 +115,6 @@ export function close() {
   document.querySelectorAll(".sound-btn").forEach((b) => b.setAttribute("aria-expanded", "false"));
 }
 
-// The ♪ button used in the HUD and on the title screen.
 export function soundButton(extraClass = "") {
   const b = document.createElement("button");
   b.type = "button";

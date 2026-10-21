@@ -1,5 +1,4 @@
-// Typewriter text boxes pinned to the bottom of the screen.
-// Tap once to finish the line, again to advance. A blinking ▼ means "more."
+// Typewriter dialogue box: tap to finish a line, tap again to advance.
 
 import { ray } from "./sprites.js";
 import { sfx } from "./sfx.js";
@@ -10,10 +9,8 @@ const reducedMotion = () =>
 
 let current = null;
 
-// lines: string | {text, mood} | array of either.
-// opts.choices: [{label, value, primary}] shown after the last line; the
-// promise resolves with the chosen value (or undefined with no choices).
-// opts.name: speaker label, default "RAY".
+// lines: string | {text, mood} | an array of them.
+// opts.choices: [{label, value, primary}]; resolves with the chosen value.
 export function say(lines, opts = {}) {
   close();
   const list = (Array.isArray(lines) ? lines : [lines]).map((l) =>

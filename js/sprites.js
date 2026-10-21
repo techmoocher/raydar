@@ -1,7 +1,4 @@
-// Pixel sprites drawn from character grids into crisp SVG.
-// PLACEHOLDER: Ray is a simple half-body bison (white horns, dark head and
-// beard, light woolly hump) until the owner's sprites exist. Swap these for
-// <img src="assets/sprites/ray-*.png"> later.
+// Pixel sprites as character grids, rendered to SVG. Placeholders for now.
 
 const COLORS = {
   k: "var(--ink)",
@@ -18,48 +15,92 @@ const COLORS = {
   E: "var(--leaf-dk)",
   u: "var(--plum)",
   s: "var(--stone)",
+  R: "var(--brick)",
   D: "var(--fur-dk)",
   F: "var(--fur)",
   L: "var(--fur-hi)",
   w: "var(--horn)",
 };
 
-// Left half of Ray's bust (24x24). Each row is mirrored to make the right.
-// Horns on the top corners, round woolly head, shoulders sloping out, and the
-// body cut off at the bottom of the frame.
+// Front views are left halves, mirrored.
 const RAY_HALF = [
   "............",
-  "..k.........", // horn tips point up...
-  "..kwk.......",
-  "..kwk...kkkk",
-  "..kwwk.kLLLL", // ...from the top corners of a woolly crown
-  "...kwwkLLFLL",
-  "....kkLLLFLF",
-  "....kFFFFFFF",
-  "...kDFkkFFFF", // eyes (rows 8-9 swap per mood)
-  "...kDFkpFFFF",
-  "...kDFFFFFFF",
-  "...kDDFFFFFF",
-  "..kLkDDDDDDD", // dark muzzle; the hump starts beside the jaw
-  ".kLLLkDDkkDD",
-  "kLLLLLkDDDDD",
-  "kLLFLLLkDDDD", // beard narrows down the chest
-  "kLFFFLLLkDDD",
-  "kFFFFFFLLkDD",
-  "kFFDFFFFFkDD",
-  "kFFFFFDFFFkD",
-  "kFDFFFFFFFFk",
-  "kFFFFFDFFFFF",
-  "kFFFFFFFFFFF",
-  "kFDFFFFFDFFF",
+  "......kkkkkk",
+  ".k..kLLFLLLL",
+  ".kwkLLFLLFLL",
+  ".kwwkLLLFLLL",
+  "..kwwkLLLLLF",
+  "..kwwwkFFFFF",
+  "...kkkDFFFFF",
+  "...kDLkkLFFF", // rows 8-9: eyes, swapped per mood
+  "...kDLkpLFFF",
+  "...kDFFFFkkk",
+  "...kDFFFkkkk",
+  "..kDDFFFkkkk",
+  "..kDDFFFFkkk",
+  "..kDDDFFFFkr",
+  "..kkDDDDDDDD",
+  ".kFFkDDDDDDD",
+  "kFFFkowwDDDD",
+  "kFFFkowwwbDD",
+  "kFFFkowwwwbb",
+  "kFFFkowwwwww",
+  "kFFFkowwwwbb",
+  "kFFFkowwwwbw",
+  "kFFFkowwwwbw",
+];
+
+const RAY_LEGS = [
+  "kFFFkowwwwbw",
+  ".kLLkowwwwbb",
+  ".kLLkooooooo",
+  "..kkkwwwwwww",
+  "....kowwwwww",
+  "....kowwwwwk",
+  "....kooooook",
+  ".....kFFFFk.",
+  ".....kFFFFk.",
+  ".....kFFFFk.",
+  ".....kDDDDk.",
+  "....kkkkkkk.",
+  "....kkkkkkk.",
 ];
 
 const RAY_EYES = {
-  happy: ["...kDFkkFFFF", "...kDFkpFFFF"],
+  happy: ["...kDLkkLFFF", "...kDLkpLFFF"],
   spooky: ["...kDkppkFFF", "...kDkpkkFFF"],
-  proud: ["...kDFFFFFFF", "...kDFkkFFFF"],
-  wistful: ["...kDkkFFFFF", "...kDFkpFFFF"],
+  proud: ["...kDLLLLFFF", "...kDkkkkFFF"],
+  wistful: ["...kDkkLFFFF", "...kDLkpLFFF"],
 };
+
+const RUN_BODY = [
+  "...............kw...",
+  ".......kkkkk...kwk..",
+  ".....kkLLLLLkk.kLLk.",
+  "....kLLLLLLLLLkkLLLk",
+  "...kFLLLLLLLLLLFFFFk",
+  "..kFFFkowwwwwokFkpFk",
+  ".kFFFFkowwwwwokFFFkk",
+  ".kFFFFkowwwwwokFFkkk",
+  "..kFFFkowwwwwokDDkkk",
+  "...kFFkoooooookDDDk.",
+];
+const RUN_FRAMES = [
+  [
+    ...RUN_BODY,
+    "..kFk.kFk...kDk.kDk.",
+    ".kFk...kFk..kDk..kDk",
+    ".kk.....kk..kk....kk",
+    "....................",
+  ],
+  [
+    "....................",
+    ...RUN_BODY,
+    "...kFkkFk...kDkkDk..",
+    "...kFkkFk...kDkkDk..",
+    "...kkkkkk...kkkkkk..",
+  ],
+];
 
 const mirror = (half) => half + [...half].reverse().join("");
 
@@ -72,6 +113,57 @@ const GEM = [
   "..kggggk..",
   "...kgBk...",
   "....kk....",
+];
+
+const HALL = [
+  "................................................................",
+  "................................................................",
+  "...............................kkoooooo.........................",
+  "...............................kkoooo...........................",
+  "...............................kkoo.............................",
+  "...............................kk...............................",
+  "...............................kk...............................",
+  "...............................kk...............................",
+  "..............................kssk..............................",
+  ".............................kssssk.............................",
+  "............................kssssssk............................",
+  "............................kkkkkkkk............................",
+  "............................kpkkkkpk............................",
+  "............................kpkkpkpk............................",
+  "............................kpkppkpk............................",
+  "............................kpkkkkpk............................",
+  "............................kkkkkkkk............................",
+  "............................kkksskkk............................",
+  ".....kkkkk...............kkksssssssskkk................kkkkk....",
+  "......kRk.............kkksssssssssssssskkk..............kRk.....",
+  "......kRk..........kssssssssssssssssssssssssk...........kRk.....",
+  "......kRk.........kkkkkkkkkkkkkkkkkkkkkkkkkkkk..........kRk.....",
+  "......kkk...........kRRRRRRRRRkppkRRRRRRRRRk............kkk.....",
+  "..kkkkkkkkkkkkkkkkkkkRRRRRRRRkppppkRRRRRRRRkkkkkkkkkkkkkkkkkkk..",
+  "..kpppppppppppppppppkRoRRRRokppooppkRoRRRRRkpppppppppppppppppk..",
+  "..kkkkkkkkkkkkkkkkkkkRppppRkppppppppkRppppRkkkkkkkkkkkkkkkkkkk..",
+  "...kkkkkkkkkkkkkkkkkkRppypkppppppppppkppypRkkkkkkkkkkkkkkkkkk...",
+  "...kRRRRRRRRRRRRRRRkkRppppkkkkkkkkkkkkppppRkkRRRRRRRRRRRRRRRk...",
+  "...kRoRRRRoRRRRoRRRkkRpyyppppppppppppppyypRkkRoRRRRoRRRRoRRRk...",
+  "...kRppppRppppRppppkkRpyypkkkkkkkkkkkkpyypRkkRppppRppppRppppk...",
+  "...kRppypRpBbpRppypkkRppppRpnpnnnnpnpoppppRkkRppypRppypRpBbpk...",
+  "...kRppppRppppRppppkkRRRRRRpnpnnnnpnpRRRRRRkkRppppRppppRppppk...",
+  "...kRpyypRpbbpRpyypkkRRRRRRpnpnnnnpnpRRRRRRkkRpyypRpyypRpbbpk...",
+  "...kRpyypRpbbpRpyypkkRRRoRRpnppppppnpRRoRRRkkRpyypRpyypRpbbpk...",
+  "...kRppppRppppRppppkkRppppRpnpnyynpnpRppppRkkRppppRppppRppppk...",
+  "...kRRRRRRRRRRRRRRRkkRppypRpnpnkknpnpRppypRkkRRRRRRRRRRRRRRRk...",
+  "...kRRRRRRRRRRRRRRRkkRppppRpnpnkknpnpoppppRkkRRRRRRRRRRRRRRRk...",
+  "...kRppppRppppRppppkkRpyypRpnpnkknpnpRpyypRkkRppppRppppRppppk...",
+  "...kRpBbpRppypRppypkkRpyypRpnpnkknpnpRpyypRkkRppypRpBbpRppypk...",
+  "...kRppppRppppRppppkkRppppRpnpnkknpnpRppppRkkRppppRppppRppppk...",
+  "...kRpbbpRpyypRpyypkkRRRRRRpnpnkknpnpRRRRRRkkRpyypRpbbpRpyypk...",
+  "..kkRpbbpRpyypkkkkpkkRRRRRRpnpnkknpnpRRRRRRkkRkkkkRpbbpRpyypkk..",
+  "..eeRppppRppppeeeepkkRoRRRRpnpnkknpnpoRRRRRkkReeeeRppppRppppee..",
+  ".eeeeRRoRRRRoeeeeeekkRRRRRRRssssssssRRRRRRRkkeeeeeeRRoRRRRoeeee.",
+  "eeeeeeRRRRRReeeeeeeekRRRRRppppppppppppRRRRRkeeeeeeeeRRRRRReeeeee",
+  "eEeeEeRRRRRReEeeEeeekRRRssssssssssssssssRRRkeEeeEeeeRRRRRReEeeEe",
+  "eeeeeekkkkkkeeeeeeeekkppppppppppppppppppppkkeeeeeeeekkkkkkeeeeee",
+  "................................................................",
 ];
 
 const LOCK = [
@@ -91,7 +183,6 @@ function gridToSvg(rows, size, label) {
   const h = rows.length;
   let rects = "";
   rows.forEach((row, y) => {
-    // Merge horizontal runs of one color into a single rect.
     let x = 0;
     while (x < w) {
       const c = row[x];
@@ -110,21 +201,37 @@ function gridToSvg(rows, size, label) {
 
 export const MOODS = Object.keys(RAY_EYES);
 
-export function ray(size = 64, mood = "happy") {
+function bustRows(mood) {
   const eyes = RAY_EYES[mood] || RAY_EYES.happy;
-  const half = [...RAY_HALF.slice(0, 8), ...eyes, ...RAY_HALF.slice(10)];
-  return gridToSvg(half.map(mirror), size, `Ray, ${mood}`);
+  return [...RAY_HALF.slice(0, 8), ...eyes, ...RAY_HALF.slice(10)];
+}
+
+export function ray(size = 64, mood = "happy") {
+  return gridToSvg(bustRows(mood).map(mirror), size, `Ray, ${mood}`);
+}
+
+export function rayFull(size = 72, mood = "happy") {
+  return gridToSvg([...bustRows(mood), ...RAY_LEGS].map(mirror), size, `Ray, ${mood}`);
+}
+
+export function rayRun(size = 40) {
+  return `<span class="run" role="img" aria-label="Ray">${RUN_FRAMES.map((f) => gridToSvg(f, size, "")).join("")}</span>`;
 }
 
 export function gem(size = 40) {
   return gridToSvg(GEM, size, "Gem");
 }
 
+
+export function hall(size = 192) {
+  return gridToSvg(HALL, size, "");
+}
+
 export function lock(size = 32) {
   return gridToSvg(LOCK, size, "Locked");
 }
 
-// Paint a sprite onto a canvas (for the collage). px = screen pixels per sprite pixel.
+// px: canvas pixels per sprite pixel.
 function paintRows(ctx, rows, x, y, px) {
   const css = getComputedStyle(document.documentElement);
   const fill = {};
@@ -140,16 +247,13 @@ function paintRows(ctx, rows, x, y, px) {
 }
 
 export function paintRay(ctx, x, y, px, mood = "happy") {
-  const eyes = RAY_EYES[mood] || RAY_EYES.happy;
-  const half = [...RAY_HALF.slice(0, 8), ...eyes, ...RAY_HALF.slice(10)];
-  return paintRows(ctx, half.map(mirror), x, y, px);
+  return paintRows(ctx, bustRows(mood).map(mirror), x, y, px);
 }
 
 export function paintGem(ctx, x, y, px) {
   return paintRows(ctx, GEM, x, y, px);
 }
 
-// 9x7 control icons for the sound panel, drawn in ink.
 const ICONS = {
   play: [
     "..k......",

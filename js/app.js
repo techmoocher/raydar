@@ -1,6 +1,6 @@
-// Router + screen state machine. Hash routes keep GitHub Pages from 404ing.
+// Hash router and screens.
 
-import { ray, gem as gemSprite, lock } from "./sprites.js";
+import { ray, rayFull, rayRun, hall, gem as gemSprite, lock, icon } from "./sprites.js";
 import { say, close as closeDialogue } from "./dialogue.js";
 import { sfx, unlock as unlockAudio } from "./sfx.js";
 import * as music from "./music.js";
@@ -36,22 +36,19 @@ const p = () => store.get();
 const foundCount = () => Object.keys(p().found).length;
 const isFound = (id) => Boolean(p().found[id]);
 
-// The first gem in route order that isn't found yet.
 const currentGem = () => GEMS.find((g) => !isFound(g.id)) || null;
 
-// A gem is open if it's found or it's the current one.
 const isOpen = (g) => isFound(g.id) || currentGem()?.id === g.id;
 
 function worldOf(g) {
   return (g || currentGem() || GEMS[GEMS.length - 1]).act;
 }
 
-// Run fn `ms` after the screen is actually on the page (after the wipe).
+// Runs after the screen is on the page (after the wipe).
 function later(screen, fn, ms = 0) {
   (screen._enter ??= []).push(() => setTimeout(fn, reducedMotion() ? 0 : ms));
 }
 
-// Cleanup to run when the player leaves the current screen.
 let leaveHooks = [];
 const onLeave = (fn) => leaveHooks.push(fn);
 
@@ -60,7 +57,6 @@ export function go(hash) {
   else location.hash = hash;
 }
 
-// 4-frame checkerboard wipe, then swap the screen underneath.
 function wipe() {
   if (reducedMotion()) return Promise.resolve();
   const w = document.createElement("div");
@@ -76,20 +72,19 @@ function wipe() {
   );
 }
 
-function starfield(count = 48) {
+// Stars stay in the side margins and top strip, never behind text.
+function starfield(count = 24) {
   let s = "";
   for (let i = 0; i < count; i++) {
-    const x = Math.floor(Math.random() * 100);
-    const y = Math.floor(Math.random() * 100);
-    const r = Math.random();
-    const cls = [r < 0.35 ? "dim" : r < 0.5 ? "gold" : "", Math.random() < 0.25 ? "tw" : ""].join(" ");
-    const delay = (Math.random() * 1.6).toFixed(1);
-    s += `<i class="${cls}" style="left:${x}%;top:${y}%;animation-delay:-${delay}s"></i>`;
+    const edge = Math.random();
+    const x = edge < 0.4 ? Math.random() * 9 : edge < 0.8 ? 91 + Math.random() * 8 : Math.random() * 100;
+    const y = edge < 0.8 ? Math.random() * 70 : Math.random() * 7;
+    const cls = Math.random() < 0.55 ? "dim" : Math.random() < 0.5 ? "gold" : "";
+    s += `<i class="${cls}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%"></i>`;
   }
   return `<div class="stars" aria-hidden="true">${s}</div>`;
 }
 
-// Grass tufts and a few flowers scattered over the map's ground.
 function meadow(count = 40) {
   let s = "";
   for (let i = 0; i < count; i++) {
@@ -102,11 +97,9 @@ function meadow(count = 40) {
   return `<div class="meadow" aria-hidden="true">${s}</div>`;
 }
 
-// Pixel ground along the bottom of the title: grass, flowers, a brick hall.
 function ground() {
   return `
     <div class="ground" aria-hidden="true">
-      <div class="ground__hall"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <i class="flower flower--gold" style="left:12%"></i>
       <i class="flower flower--cherry" style="left:22%"></i>
       <i class="flower flower--gold" style="left:78%"></i>
@@ -114,13 +107,11 @@ function ground() {
     </div>`;
 }
 
-// HUD: WORLD 1 · GEMS 01/12 · ▂▄▆█ · ♪
 function hud(g) {
   const bar = el(`
     <header class="hud" data-act="${worldOf(g)}">
       <span class="hud__world">WORLD ${worldOf(g)}</span>
-      <span class="hud__sep" aria-hidden="true">·</span>
-      <span class="hud__gems">GEMS ${pad2(foundCount())}/${GEMS.length}</span>
+      <span class="hud__gems" aria-label="${foundCount()} of ${GEMS.length} gems found">${gemSprite(16)}${pad2(foundCount())}/${GEMS.length}</span>
       <span class="hud__bars" hidden aria-label="Signal"></span>
     </header>
   `);
@@ -152,24 +143,21 @@ function titleScreen() {
     <section class="screen title" aria-label="Title screen">
       ${starfield()}
       <h1 class="title__logo">
-        <span class="title__hidden">HIDDEN</span>
-        <span class="title__gems">GEMS</span>
+        <span class="title__hidden">RAY</span>
+        <span class="title__gems">DAR</span>
       </h1>
-      <p class="title__sub">RAY BUCKNELL'S HUNT</p>
-      <div class="title__art">
-        <div class="bob">${ray(120)}</div>
-        <div class="spin">${gemSprite(40)}</div>
-      </div>
+      <p class="title__sub">RAY BUCKNELL'S<br>SCAVENGER HUNT</p>
       <div class="title__actions">
         ${
           saved
             ? `<button class="btn btn--big" type="button" data-act="continue">CONTINUE</button>
-               <button class="btn btn--big btn--blue" type="button" data-act="new">NEW GAME</button>`
-            : `<button class="press-start blink" type="button" data-act="start">PRESS START</button>`
+               <button class="btn btn--blue" type="button" data-act="new">NEW GAME</button>`
+            : `<button class="btn btn--big press-start" type="button" data-act="start">START <span class="press-start__arrow" aria-hidden="true">${icon("play", 14)}</span></button>`
         }
       </div>
-      <p class="title__copy">© 1846 RAY BUCKNELL</p>
       ${ground()}
+      <div class="title__hall" aria-hidden="true">${hall(192)}</div>
+      <div class="title__ray bob" aria-hidden="true">${rayFull(84)}</div>
     </section>
   `);
   screen.appendChild(soundButton("title__sound"));
@@ -195,7 +183,7 @@ function titleScreen() {
     go("#/intro");
   });
 
-  // Long-press the logo to wipe the save (for testers).
+  // Long-press the logo to wipe the save.
   const logo = screen.querySelector(".title__logo");
   let timer = null;
   const cancel = () => clearTimeout(timer);
@@ -225,7 +213,7 @@ function introScreen() {
       ${starfield(24)}
       <div class="screen__body">
         <div class="stage" aria-hidden="true">
-          <div class="walker is-walking">${ray(96)}</div>
+          <div class="walker is-walking">${rayFull(84)}</div>
         </div>
         <div class="name-slot"></div>
       </div>
@@ -236,7 +224,7 @@ function introScreen() {
     if (!screen.isConnected) return;
     screen.querySelector(".walker").classList.remove("is-walking");
     await say([
-      { text: "HEY! Over here! Name's Ray. Ray Bucknell." },
+      { text: "HEY! Over here!\nHi, my name's Ray. Ray Bucknell." },
       { text: "I've been on this hill longer than most of the bricks." },
       { text: "I hid twelve of my cards around campus. Each one marks a gem: a spot I never want anyone to forget." },
       { text: "Find them with me, snap a photo at each one, and we'll fill a page of my book together." },
@@ -277,7 +265,7 @@ function askName(screen) {
     });
     sfx.select();
     slot.replaceChildren();
-    await say({ text: `${name}! Great name. I'll remember it.`, mood: "proud" });
+    await say({ text: `${name}... What a great name!`, mood: "proud" });
     if (!screen.isConnected) return;
     if (emailOn() && !p().emailAsked) {
       await offerEmail(slot);
@@ -285,7 +273,6 @@ function askName(screen) {
     }
     await say("Our first gem is close. Real close. Let's look at the map.");
     if (!screen.isConnected) return;
-    // A card scanned with the phone's camera before the player had a save.
     const scanned = Object.keys(p().verified)[0];
     pendingDeepLink = null;
     go(scanned ? `#/proof/${scanned}` : "#/map");
@@ -294,7 +281,7 @@ function askName(screen) {
 
 // ---------- email ----------
 
-// The email field. Resolves with the saved address, or null if skipped.
+// Resolves with the saved address, or null if skipped.
 function emailForm(slot, { skipLabel = "SKIP" } = {}) {
   slot.replaceChildren(
     el(`
@@ -340,7 +327,6 @@ function emailForm(slot, { skipLabel = "SKIP" } = {}) {
   });
 }
 
-// Asked once, right after the name. Optional either way.
 async function offerEmail(slot) {
   const yes = await say("Want me to mail you your page of my book? Photos, times, the works. Totally optional.", {
     choices: [
@@ -368,7 +354,7 @@ async function offerEmail(slot) {
 
 const ROW = 104;
 const BANNER = 64;
-const XS = [50, 74, 50, 26]; // zig-zag positions in %
+const XS = [50, 74, 50, 26]; // node x positions, %
 
 function mapScreen() {
   const cur = currentGem();
@@ -379,7 +365,6 @@ function mapScreen() {
   `);
   screen.prepend(hud(cur));
 
-  // Lay out banners and nodes top to bottom, then draw the path behind them.
   let y = 16;
   let lastAct = null;
   const items = [];
@@ -425,15 +410,27 @@ function mapScreen() {
         <span class="node__label">${esc(label)}</span>
       </button>
     `);
-    if (current) {
-      node.appendChild(el(`<span class="node__ray bob" aria-hidden="true">${ray(44)}</span>`));
-    }
     node.addEventListener("click", () => {
       sfx.select();
       go(found ? "#/book" : `#/gem/${g.id}`);
     });
     world.appendChild(node);
   });
+
+  const nodes = items.filter((it) => it.type === "node");
+  const target = nodes.find((it) => it.g.id === cur?.id) || nodes[nodes.length - 1];
+  const start = nodes[nodes.indexOf(target) - 1] || target;
+  const spot = (it) => ({ left: `calc(${it.x}% - 76px)`, top: `${it.y + 10}px` });
+  const runner = el(`<div class="runner" aria-hidden="true">${rayRun(44)}</div>`);
+  Object.assign(runner.style, spot(start));
+  if (target.x < start.x) runner.classList.add("is-left");
+  world.appendChild(runner);
+  later(screen, () => {
+    if (start === target) return;
+    runner.classList.add("is-running");
+    requestAnimationFrame(() => Object.assign(runner.style, spot(target)));
+    setTimeout(() => runner.classList.remove("is-running", "is-left"), reducedMotion() ? 0 : 1300);
+  }, 250);
 
   const body = el(`<div class="map__body"></div>`);
   body.appendChild(world);
@@ -442,15 +439,28 @@ function mapScreen() {
 
   const dock = el(`
     <nav class="dock">
-      <button class="btn btn--blue" type="button" data-act="book">RAY'S BOOK</button>
-      <button class="btn btn--blue" type="button" data-act="title">TITLE</button>
+      ${
+        cur
+          ? `<button class="btn btn--big dock__go" type="button" data-act="go">
+               <span class="dock__go-n">GEM ${pad2(cur.n)}</span>
+               <span>GO: ${esc(cur.name)}</span>
+             </button>`
+          : ""
+      }
+      <div class="dock__row">
+        <button class="btn btn--blue" type="button" data-act="book">RAY'S BOOK</button>
+        <button class="btn btn--blue" type="button" data-act="title">TITLE</button>
+      </div>
     </nav>
   `);
+  dock.querySelector("[data-act=go]")?.addEventListener("click", () => {
+    sfx.select();
+    go(`#/gem/${cur.id}`);
+  });
   dock.querySelector("[data-act=book]").addEventListener("click", () => go("#/book"));
   dock.querySelector("[data-act=title]").addEventListener("click", () => go("#/title"));
   screen.appendChild(dock);
 
-  // Bring the current node into view once it's on the page.
   later(screen, () => {
     screen.querySelector(".node--current")?.scrollIntoView({ block: "center", behavior: "instant" });
   });
@@ -460,7 +470,7 @@ function mapScreen() {
       if (!screen.isConnected) return;
       await say([
         "This is my map of campus. Twelve gems, one path.",
-        "The blinking spot is where we're headed. Tap it when you're ready.",
+        "The orange spot is where we're headed. Tap GO when you're ready.",
       ]);
       store.update((s) => {
         s.tips = { ...s.tips, map: true };
@@ -517,7 +527,6 @@ function gemScreen(id) {
   });
   screen.querySelector("[data-act=map]").addEventListener("click", () => go("#/map"));
 
-  // GPS bars, only with Ray's explanation first and only if the gem has coords.
   const startBars = () => {
     onLeave(geo.watch(g.geo, ({ bars }) => setBars(screen, bars), () => setBars(screen, null)));
   };
@@ -748,7 +757,6 @@ function proofScreen(id) {
 
 // ---------- ITEM GET ----------
 
-// Flat pixel confetti that falls in frame steps.
 const CONFETTI = ["gold", "cherry", "leaf", "plum", "gem", "orange", "paper"];
 function confetti(count = 36) {
   let s = "";
@@ -1009,7 +1017,6 @@ const routes = [
 
 let first = true;
 
-// Which track each screen plays. Same track = keeps playing across screens.
 const SCREEN_MUSIC = {
   title: "title",
   intro: "title",
@@ -1041,7 +1048,7 @@ async function render() {
 
   if (!first) await wipe();
   first = false;
-  app.replaceChildren(); // detach first so pending dialogue continuations bail out
+  app.replaceChildren(); // detach first so pending dialogue callbacks bail out
   closeDialogue();
   closeSoundPanel();
   app.appendChild(screen);
@@ -1052,8 +1059,7 @@ async function render() {
 
 window.addEventListener("hashchange", render);
 
-// Phones only allow audio after a tap, so the first tap anywhere unlocks it
-// (and starts the music if it's on).
+// Phones only allow audio after a user gesture.
 const firstTap = () => {
   unlockAudio();
   ["click", "touchend", "keydown"].forEach((e) => document.removeEventListener(e, firstTap, true));

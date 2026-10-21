@@ -1,16 +1,12 @@
-// Background chiptune: a tiny WebAudio sequencer with NES-style voices
-// (25% pulse lead, triangle bass, noise drums). Original tunes, no audio files.
+// Chiptune sequencer: pulse lead, triangle bass, noise drums.
 
 import { audio, onUnlock } from "./sfx.js";
 
-// ---------- tracks ----------
-// Each bar is 16 sixteenth-note steps. Lead tokens: a note ("E5"), "-" holds
-// the previous note, "." is a rest. Bass comes from one chord root per bar.
-// Drum tokens: k kick, s snare, h hat, "." nothing.
+// 16 steps per bar. Lead: note ("E5"), "-" hold, "." rest. Drums: k s h.
 
 export const TRACKS = {
   title: {
-    name: "HIDDEN GEMS",
+    name: "RAYDAR",
     bpm: 132,
     roots: ["C3", "A2", "F2", "G2", "C3", "A2", "F2", "G2"],
     bass: "pump",
@@ -64,8 +60,6 @@ export const TRACKS = {
 
 export const TRACK_IDS = Object.keys(TRACKS);
 
-// ---------- note math + parsing ----------
-
 const SEMI = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 };
 
 function freq(note) {
@@ -83,7 +77,6 @@ const BASS = {
   half: (r) => [r, "-", "-", "-", "-", "-", "-", "-", r, "-", "-", "-", "-", "-", "-", "."],
 };
 
-// Turn token rows into [{ step, len, f }] so each note is scheduled once.
 function events(tokens) {
   const out = [];
   tokens.forEach((t, i) => {
@@ -117,8 +110,6 @@ function compile(id) {
   });
 }
 
-// ---------- voices ----------
-
 const VOLUME_LEVELS = [0, 0.05, 0.1, 0.16, 0.24];
 const KEY = "hg.music";
 
@@ -126,8 +117,8 @@ let ctx = null;
 let musicGain = null;
 let pulse = null;
 let noise = null;
-let current = null; // { id, bus, timer, nextTime, step }
-let wanted = null; // the screen's track, played once audio unlocks
+let current = null;
+let wanted = null; // played once audio unlocks
 let prefs = loadPrefs();
 const listeners = new Set();
 
@@ -153,7 +144,7 @@ function setup(c) {
   musicGain.gain.value = VOLUME_LEVELS[prefs.level];
   musicGain.connect(ctx.destination);
 
-  // 25% duty pulse, the classic NES lead sound.
+  // 25% duty pulse wave.
   const n = 32;
   const real = new Float32Array(n);
   const imag = new Float32Array(n);
@@ -164,7 +155,6 @@ function setup(c) {
   const data = noise.getChannelData(0);
   for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
 
-  // Pause with the tab; resume when it comes back.
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) ctx.suspend();
     else ctx.resume();
@@ -221,8 +211,6 @@ function drum(bus, kind, t) {
   src.stop(t + len + 0.01);
 }
 
-// ---------- transport ----------
-
 function start(id) {
   const song = compile(id);
   stopCurrent();
@@ -267,8 +255,6 @@ function stopCurrent() {
   current = null;
 }
 
-// ---------- public API ----------
-
 export function state() {
   const id = current?.id || wanted;
   return {
@@ -286,7 +272,6 @@ export const subscribe = (fn) => {
   return () => listeners.delete(fn);
 };
 
-// Screens call this. Keeps playing if the track is already on.
 export function play(id) {
   wanted = id;
   if (!ctx || !prefs.on) return listeners.forEach((fn) => fn(state()));
@@ -316,7 +301,6 @@ export function setLevel(level) {
   savePrefs();
 }
 
-// Dip the music under a jingle, then bring it back.
 export function duck(seconds = 1.5) {
   if (!musicGain) return;
   const t = ctx.currentTime;
