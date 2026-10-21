@@ -1,4 +1,4 @@
-// Apps Script /exec URL. Empty turns email off. Setup: docs branch, #email.
+// Apps Script /exec URL. Empty turns email off. Setup: https://techmoocher.github.io/raydar.docs/#email
 const DEPLOYED_MAILER = "";
 
 const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);

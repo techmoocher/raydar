@@ -24,8 +24,11 @@ Open <http://localhost:5173>. No dependencies or build step needed.
 ## Documentation
 
 Setup, content editing, email, and hosting instructions live in the
-[docs branch](https://github.com/techmoocher/raydar/tree/docs), which contains
-a small static documentation site ready to host.
+[documentation site](https://techmoocher.github.io/raydar.docs/), maintained
+in [techmoocher/raydar.docs](https://github.com/techmoocher/raydar.docs).
+
+The [game](https://techmoocher.github.io/raydar/) publishes from this repository's
+`main` branch. The docs publish independently from `main` in `raydar.docs`.
 
 ## License
 
