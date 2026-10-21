@@ -279,6 +279,12 @@ export function play(id) {
   start(id);
 }
 
+export function silence() {
+  wanted = null;
+  stopCurrent();
+  listeners.forEach((fn) => fn(state()));
+}
+
 export function toggle() {
   prefs.on = !prefs.on;
   if (!prefs.on) stopCurrent();

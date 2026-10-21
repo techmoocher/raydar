@@ -4,6 +4,7 @@ import { unlock as unlockAudio } from "./audio/sfx.js";
 import * as store from "./core/store.js";
 import { redirect, start } from "./core/router.js";
 import { titleScreen } from "./screens/title.js";
+import { callScreen } from "./screens/call.js";
 import { introScreen } from "./screens/intro.js";
 import { mapScreen } from "./screens/map.js";
 import { gemScreen } from "./screens/gem.js";
@@ -17,6 +18,7 @@ const needsSave = (fn) => (...args) => (store.hasSave() ? fn(...args) : redirect
 const routes = [
   [/^#?\/?$/, titleScreen],
   [/^#\/title$/, titleScreen],
+  [/^#\/call$/, callScreen],
   [/^#\/intro$/, introScreen],
   [/^#\/map$/, needsSave(mapScreen)],
   [/^#\/gem\/([a-z]+)$/, needsSave(gemScreen)],

@@ -40,7 +40,7 @@ export function titleScreen() {
       fn();
     });
 
-  on("start", () => go("#/intro"));
+  on("start", () => go("#/call"));
   on("continue", () => go("#/map"));
   on("new", async () => {
     const ok = await say("Start over? Your photos and progress will be erased.", {
@@ -51,7 +51,7 @@ export function titleScreen() {
     });
     if (!ok) return;
     await store.reset();
-    go("#/intro");
+    go("#/call");
   });
 
   // Long-press the logo to wipe the save.

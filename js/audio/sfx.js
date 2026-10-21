@@ -12,7 +12,6 @@ function readPref() {
 
 const unlockListeners = [];
 
-// Call from a user gesture.
 export function unlock() {
   const first = !ctx;
   if (!ctx) {
@@ -66,6 +65,12 @@ export const sfx = {
   itemGet: () => {
     [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.08, 0.08));
     tone(1319, 0.32, 0.36);
+  },
+  // One ring of an old phone: two quick trills.
+  ring: () => {
+    [0, 0.5].forEach((b) => {
+      for (let i = 0; i < 8; i++) tone(i % 2 ? 1175 : 1480, b + i * 0.05, 0.045, 0.035);
+    });
   },
   fanfare: () => {
     const notes = [392, 392, 392, 523, 0, 659, 784];

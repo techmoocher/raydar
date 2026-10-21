@@ -1,4 +1,3 @@
-// createImageBitmap applies EXIF orientation; <img> is the fallback.
 export async function loadImage(file) {
   if ("createImageBitmap" in window) {
     try {

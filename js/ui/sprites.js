@@ -302,6 +302,41 @@ const ICONS = {
   ],
 };
 ICONS.prev = ICONS.next.map((r) => [...r].reverse().join(""));
+ICONS.phone = [
+  "kkk......",
+  "kkk......",
+  "kkk......",
+  ".kk......",
+  ".kkk.....",
+  "..kkk....",
+  "...kkkkkk",
+  "....kkkkk",
+  "......kkk",
+];
+
+// Mystery caller: a silhouette with a question mark for a face.
+const CALLER = [
+  "................",
+  "......BBBB......",
+  "....BBBBBBBB....",
+  "...BBBppppBBB...",
+  "...BBppBBppBB...",
+  "...BBBBBBppBB...",
+  "...BBBBBppBBB...",
+  "....BBBppBBB....",
+  "....BBBBBBBB....",
+  ".....BBppBB.....",
+  "......BBBB......",
+  "......BBBB......",
+  "...BBBBBBBBBB...",
+  "..BBBBBBBBBBBB..",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+];
+
+export function caller(size = 96) {
+  return gridToSvg(CALLER, size, "Unknown caller");
+}
 
 export function icon(name, size = 18) {
   return gridToSvg(ICONS[name], size, "");

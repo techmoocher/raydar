@@ -53,6 +53,7 @@ let routes = [];
 
 const SCREEN_MUSIC = {
   title: "title",
+  call: null, // the ringtone plays instead
   intro: "title",
   map: "overworld",
   gem: "riddle",
@@ -87,7 +88,10 @@ async function render() {
   closeSoundPanel();
   app.appendChild(screen);
   window.scrollTo(0, 0);
-  music.play(SCREEN_MUSIC[location.hash.split("/")[1] || "title"] || "overworld");
+  const key = location.hash.split("/")[1] || "title";
+  const track = key in SCREEN_MUSIC ? SCREEN_MUSIC[key] : "overworld";
+  if (track) music.play(track);
+  else music.silence();
   screen._enter?.forEach((fn) => fn());
 }
 

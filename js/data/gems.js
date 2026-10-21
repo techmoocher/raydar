@@ -1,4 +1,5 @@
-// All game content. Add new stops here; see https://techmoocher.github.io/raydar.docs/#content
+// All game content. Add new stops here
+// More information in https://techmoocher.github.io/raydar.docs/#content
 
 export const ACTS = {
   1: "BEFORE RAY HAD A NAME",

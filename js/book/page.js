@@ -26,7 +26,6 @@ export function stamp(iso) {
     .toUpperCase();
 }
 
-// Seeded so the stars are the same every time.
 function stars(ctx, c) {
   let seed = 1846;
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
@@ -54,7 +53,6 @@ function centerText(ctx, text, y, font, color, shadow) {
   ctx.fillText(text, W / 2, y);
 }
 
-// Like object-fit: cover.
 function cover(ctx, img, x, y, w, h) {
   const iw = img.naturalWidth || img.width;
   const ih = img.naturalHeight || img.height;

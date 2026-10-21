@@ -1,4 +1,5 @@
-// Emails a player their page of Ray's book. Setup: https://techmoocher.github.io/raydar.docs/#email
+// Emails a player their page of Ray's book.
+// Setup: https://techmoocher.github.io/raydar.docs/#email
 
 var MAX_PER_ADDRESS = 3;
 var WINDOW_SECONDS = 6 * 60 * 60;
