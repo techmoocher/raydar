@@ -5,7 +5,7 @@ import { el, esc, pad2, reducedMotion } from "../ui/dom.js";
 import { hud } from "../ui/hud.js";
 import { emailForm } from "../ui/email-form.js";
 import { sfx } from "../audio/sfx.js";
-import { GEMS } from "../data/gems.js";
+import { GEMS, cardBackLines } from "../data/gems.js";
 import * as store from "../core/store.js";
 import { p, foundCount } from "../core/progress.js";
 import { go, trackUrl } from "../core/router.js";
@@ -61,7 +61,7 @@ export function bookScreen() {
     open.appendChild(fig);
     open.addEventListener("click", () => {
       sfx.select();
-      say([...g.memory, { text: `${g.cardBack} — Ray`, mood: "proud", name: "CARD BACK" }]);
+      say([...g.memory, ...cardBackLines(g).map((l) => ({ ...l, name: "CARD BACK" }))]);
     });
     grid.appendChild(open);
     store.getPhoto(g.id).then((blob) => {

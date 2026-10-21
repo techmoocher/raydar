@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raydar · Ray's cards</title>
+<!-- Printable black-and-white cards, built from js/data/gems.js. -->
+<style>
+  @font-face {
+    font-family: "Press Start 2P";
+    src: url("../assets/fonts/PressStart2P.woff2") format("woff2");
+    font-display: block;
+  }
+  @font-face {
+    font-family: "VT323";
+    src: url("../assets/fonts/VT323.woff2") format("woff2");
+    font-display: block;
+  }
+
+  @page { size: letter; margin: 0; }
+
+  :root {
+    --k: #000;
+    --w: #fff;
+    --pixel: "Press Start 2P", monospace;
+    --text: "VT323", monospace;
+    --card-w: 4in;
+    --card-h: 5in;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #d9d9d9;
+    color: var(--k);
+    font-family: system-ui, sans-serif;
+  }
+
+  /* ---------- Screen-only control panel ---------- */
+  .panel {
+    max-width: 8.5in;
+    margin: 24px auto;
+    padding: 20px 24px;
+    background: var(--w);
+    border: 2px solid var(--k);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .panel h1 { font: 16px/1.4 var(--pixel); margin: 0 0 12px; }
+  .panel h2 { font: 11px/1.4 var(--pixel); margin: 18px 0 8px; }
+  .panel .row { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
+  .panel label { display: inline-flex; gap: 6px; align-items: center; }
+  .panel input[type="url"] { width: 100%; padding: 6px 8px; font: inherit; }
+  .panel table { border-collapse: collapse; width: 100%; }
+  .panel td, .panel th { padding: 4px 8px; border-bottom: 1px solid #ccc; text-align: left; }
+  .panel th { font-weight: 600; }
+  .panel input[type="number"] { width: 4em; font: inherit; }
+  .panel code { font-size: 13px; }
+  .panel .warn { color: #8a3b00; }
+  .panel ol { margin: 6px 0 0; padding-left: 20px; }
+  .panel button {
+    font: 12px var(--pixel);
+    padding: 12px 18px;
+    background: var(--k);
+    color: var(--w);
+    border: 0;
+    cursor: pointer;
+  }
+  .summary { font-weight: 600; }
+
+  /* ---------- Sheets ---------- */
+  .sheet {
+    position: relative;
+    width: 8.5in;
+    height: 11in;
+    margin: 24px auto;
+    background: var(--w);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.25);
+  }
+  .slot { position: absolute; width: var(--card-w); height: var(--card-h); }
+
+  /* Fold layout: front | back, two per sheet. Cut the outer line, fold the middle. */
+  .fold { position: absolute; left: 0.25in; width: 8in; height: var(--card-h); }
+  .fold:nth-child(1) { top: 0.25in; }
+  .fold:nth-child(2) { top: 5.75in; }
+  .fold .slot:first-child { left: 0; }
+  .fold .slot:last-child { left: var(--card-w); }
+  .fold::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    border-left: 1px dashed #000;
+    opacity: 0.35;
+  }
+  .fold-tag {
+    position: absolute;
+    left: 50%;
+    top: 5.44in;
+    transform: translateX(-50%);
+    font: 6px var(--pixel);
+    white-space: nowrap;
+  }
+
+  /* Two-sided layout: 2 x 2, backs mirrored for a long-edge flip. */
+  .grid .slot:nth-child(1) { left: 0.25in; top: 0.5in; }
+  .grid .slot:nth-child(2) { left: 4.25in; top: 0.5in; }
+  .grid .slot:nth-child(3) { left: 0.25in; top: 5.5in; }
+  .grid .slot:nth-child(4) { left: 4.25in; top: 5.5in; }
+
+  /* Cut guide: a light dotted line on the card edge. */
+  .card { position: absolute; inset: 0; outline: 1px dotted rgb(0 0 0 / 0.45); outline-offset: -0.5px; }
+
+  /* ---------- Card faces ---------- */
+  .face {
+    position: absolute;
+    inset: 0.2in;
+    padding: 0.2in 0.2in 0.16in;
+    display: flex;
+    flex-direction: column;
+  }
+  .frame { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .face > *:not(.frame) { position: relative; }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.08in;
+    padding-bottom: 0.08in;
+    border-bottom: 2px dashed var(--k);
+  }
+  .who { display: flex; align-items: center; gap: 0.08in; font: 9px/1 var(--pixel); }
+  .who > svg { width: 0.42in; height: 0.42in; }
+  .num { font: 9px/1 var(--pixel); text-align: right; }
+  .num b { display: block; font-size: 15px; margin-top: 4px; font-weight: normal; }
+
+  .qr { flex: 1; min-height: 0; display: flex; justify-content: center; padding: 0.02in 0; }
+  .qr > svg { height: 100%; width: auto; max-width: 100%; aspect-ratio: 1; display: block; }
+
+  .word {
+    font: 22px/1 var(--pixel);
+    letter-spacing: 0.06em;
+    text-align: center;
+    white-space: nowrap;
+    margin: 0.02in 0 0.08in;
+  }
+  .how { font: 16px/1.05 var(--text); text-align: center; }
+  .how b { font-weight: normal; letter-spacing: 0.02em; }
+  .leave {
+    margin-top: 0.06in;
+    padding-top: 0.06in;
+    border-top: 1px solid var(--k);
+    font: 13px/1.1 var(--text);
+    text-align: center;
+  }
+
+  .back .head { display: flex; gap: 0.12in; align-items: center; }
+  .back .head > svg { width: 0.62in; height: 0.62in; flex: none; }
+  .back .found { font: 8px/1.4 var(--pixel); }
+  .back .found b {
+    display: block;
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: normal;
+    margin: 3px 0 5px;
+  }
+  .say {
+    flex: 1;
+    min-height: 0;
+    margin-top: 0.1in;
+    display: flex;
+    flex-direction: column;
+    gap: 0.08in;
+    overflow: hidden;
+    font: 24px/1 var(--text);
+  }
+  .say p { margin: 0; }
+  .say .note p + p { margin-top: 0.25em; }
+  .say .who-says { font: 8px/1 var(--pixel); display: block; margin-bottom: 5px; }
+  .say .bonus { border: 2px solid var(--k); padding: 0.07in 0.09in; }
+  .say .todo { border: 2px dashed var(--k); padding: 0.1in; font-size: 17px; }
+  .say .todo code { font: inherit; }
+  .sig { font: 9px var(--pixel); text-align: right; margin-top: 0.04in; }
+
+  .blank { position: absolute; inset: 0; }
+
+  @media print {
+    body { background: none; }
+    .panel { display: none; }
+    .sheet { margin: 0; box-shadow: none; break-after: page; }
+    .sheet:last-child { break-after: auto; }
+  }
+</style>
+</head>
+<body>
+  <section class="panel" aria-label="Print settings">
+    <h1>RAY'S CARDS</h1>
+    <p>Black ink only. Every card is built from <code>js/data/gems.js</code>, so
+      reprint after changing a code, token or card back.</p>
+
+    <h2>LAYOUT</h2>
+    <div class="row">
+      <label><input type="radio" name="layout" value="fold" checked> Fold (one-sided, 2 cards per sheet)</label>
+      <label><input type="radio" name="layout" value="duplex"> Two-sided (4 cards per sheet)</label>
+    </div>
+
+    <h2>GAME LINK IN THE QR</h2>
+    <input type="url" id="base" value="https://raydar.games.techmoocher.com/" spellcheck="false">
+
+    <h2>QR STYLE</h2>
+    <div class="row">
+      <label><input type="radio" name="ecc" value="Q" checked> Plain, bigger squares (easier to scan)</label>
+      <label><input type="radio" name="ecc" value="H"> Ray in the middle (needs a closer photo)</label>
+    </div>
+
+    <h2>COPIES</h2>
+    <table>
+      <thead><tr><th>#</th><th>Gem</th><th>Word</th><th>Card back</th><th>Copies</th></tr></thead>
+      <tbody id="copies"></tbody>
+    </table>
+    <p class="summary" id="summary"></p>
+
+    <h2>PRINTING</h2>
+    <ol id="steps"></ol>
+    <p><button type="button" id="print">PRINT</button></p>
+  </section>
+
+  <main id="sheets"></main>
+
+<script src="../vendor/qrcode-generator-1.4.4.js"></script>
+<script type="module">
+  import { GEMS } from "../js/data/gems.js";
+  import { ray } from "../js/ui/sprites.js";
+  import { plain } from "../js/ui/dialogue.js";
+
+  const $ = (sel) => document.querySelector(sel);
+  const esc = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const pad = (n) => String(n).padStart(2, "0");
+  const TOTAL = GEMS.length;
+
+  // ---------- Ray in 1-bit: palette colors become 2x2 dither tones ----------
+  // 0 = paper, 4 = solid ink. Tones are tuned for a black laser printer.
+  const TONE = {
+    ink: 4, night: 4, blue: 4, "blue-hi": 2, orange: 4, "orange-hi": 1,
+    paper: 0, horn: 0, gem: 1, gold: 1, stone: 1, leaf: 1,
+    cherry: 3, "leaf-dk": 3, plum: 3, brick: 3,
+    "fur-dk": 3, fur: 1, "fur-hi": 0,
+  };
+  const DOTS = [[], [[0, 0]], [[0, 0], [1, 1]], [[0, 0], [1, 1], [0, 1]]];
+
+  function inkSprite(svg) {
+    const [, w, h] = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
+    let rects = "";
+    for (const m of svg.matchAll(/<rect x="(\d+)" y="(\d+)" width="(\d+)" height="1" fill="var\(--([a-z-]+)\)"\/>/g)) {
+      const [x, y, run] = [+m[1], +m[2], +m[3]];
+      const tone = TONE[m[4]] ?? 2;
+      if (tone === 4) {
+        rects += `<rect x="${x * 2}" y="${y * 2}" width="${run * 2}" height="2"/>`;
+        continue;
+      }
+      for (let i = 0; i < run; i++) {
+        for (const [dx, dy] of DOTS[tone]) {
+          rects += `<rect x="${(x + i) * 2 + dx}" y="${y * 2 + dy}" width="1" height="1"/>`;
+        }
+      }
+    }
+    return `<svg viewBox="0 0 ${w * 2} ${h * 2}" shape-rendering="crispEdges" fill="#000" aria-hidden="true">${rects}</svg>`;
+  }
+
+  const RAY = inkSprite(ray(64, "happy"));
+
+  // ---------- QR ----------
+  const QUIET = 3; // modules of paper around the code
+
+  function qrSvg(text, level) {
+    const qr = window.qrcode(0, level);
+    qr.addData(text);
+    qr.make();
+    const n = qr.getModuleCount();
+    const size = n + QUIET * 2;
+    // Ray sits in a paper square in the middle, only with level H (30% recovery).
+    const hole = level === "H" ? Math.round(n * 0.26) | 1 : 0;
+    const h0 = Math.floor((n - hole) / 2);
+    const inHole = (r, c) => hole && r >= h0 && r < h0 + hole && c >= h0 && c < h0 + hole;
+    let d = "";
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        if (qr.isDark(r, c) && !inHole(r, c)) d += `M${c + QUIET} ${r + QUIET}h1v1h-1z`;
+      }
+    }
+    let logo = "";
+    if (hole) {
+      const inset = 1;
+      const s = hole - inset * 2;
+      const at = h0 + QUIET + inset;
+      logo = `<svg x="${at}" y="${at}" width="${s}" height="${s}" viewBox="0 0 48 48">${RAY.replace(/^<svg[^>]*>|<\/svg>$/g, "")}</svg>`;
+    }
+    return {
+      modules: n,
+      svg: `<svg viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="QR code"><rect width="${size}" height="${size}" fill="#fff"/><path d="${d}" fill="#000"/>${logo}</svg>`,
+    };
+  }
+
+  // ---------- Pixel frame with notched corners (SVG, so it always prints) ----------
+  // Sized in 1/100 in to match a 3.6 x 4.6 in face.
+  const FRAME = (() => {
+    const W = 360, H = 460, t = 4, n = 8;
+    // Outer notched shape minus an inner one = a stepped 4-unit border.
+    const outer = `M${n} 0H${W - n}V${n / 2}H${W - n / 2}V${n}H${W}V${H - n}H${W - n / 2}V${H - n / 2}H${W - n}V${H}H${n}V${H - n / 2}H${n / 2}V${H - n}H0V${n}H${n / 2}V${n / 2}H${n}Z`;
+    const i = t;
+    const inner = `M${n + i} ${i}H${W - n - i}V${n / 2 + i}H${W - n / 2 - i}V${n + i}H${W - i}V${H - n - i}H${W - n / 2 - i}V${H - n / 2 - i}H${W - n - i}V${H - i}H${n + i}V${H - n / 2 - i}H${n / 2 + i}V${H - n - i}H${i}V${n + i}H${n / 2 + i}V${n / 2 + i}H${n + i}Z`;
+    return `<svg class="frame" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${outer} ${inner}" fill="#000" fill-rule="evenodd"/></svg>`;
+  })();
+
+  // ---------- Card faces ----------
+  const linkOf = (base, gem) => `${base.replace(/#.*$/, "").replace(/\/?$/, "/")}#/found/${gem.id}/${gem.token}`;
+  const host = (base) => base.replace(/^https?:\/\//, "").replace(/[#?].*$/, "").replace(/\/$/, "");
+
+  function front(gem, opts) {
+    const { svg } = qrSvg(linkOf(opts.base, gem), opts.ecc);
+    return `
+      <div class="card front">
+        <div class="face">
+          ${FRAME}
+          <div class="bar">
+            <div class="who">${RAY}<span>RAY'S CARD</span></div>
+            <div class="num">GEM<b>${pad(gem.n)}/${pad(TOTAL)}</b></div>
+          </div>
+          <div class="qr">${svg}</div>
+          <div class="word fit-w">${esc(gem.code)}</div>
+          <div class="how">Snap me in Raydar, or type the word.<br><b>${esc(host(opts.base))}</b></div>
+          <div class="leave">Part of a campus scavenger hunt. Please leave me here!</div>
+        </div>
+      </div>`;
+  }
+
+  // cardBack/bonus: a string, {text}, or an array of them (one per dialogue line).
+  const linesOf = (v) => [].concat(v || []).map((l) => (typeof l === "string" ? l : l?.text || "")).filter(Boolean);
+  const textOf = (v) => linesOf(v).join(" ");
+
+  function back(gem) {
+    const said = linesOf(gem.cardBack);
+    const bonus = textOf(gem.bonus);
+    const body = said.length
+      ? `<div class="note"><span class="who-says">RAY:</span>${said.map((l) => `<p>${esc(plain(l))}</p>`).join("")}</div>`
+      : `<p class="todo">Card back not written yet. Add <code>cardBack</code> for “${esc(gem.id)}” in gems.js, then reprint.</p>`;
+    return `
+      <div class="card back">
+        <div class="face">
+          ${FRAME}
+          <div class="head">
+            ${RAY}
+            <div class="found">YOU FOUND<b>${esc(gem.name.toUpperCase())}</b>GEM ${pad(gem.n)}/${pad(TOTAL)}</div>
+          </div>
+          <div class="say fit-h">
+            ${body}
+            ${bonus ? `<p class="bonus"><span class="who-says">BONUS FACT</span>${esc(plain(bonus))}</p>` : ""}
+          </div>
+          <div class="sig">— RAY</div>
+        </div>
+      </div>`;
+  }
+
+  // ---------- Layout ----------
+  function render() {
+    const opts = {
+      layout: $('input[name="layout"]:checked').value,
+      ecc: $('input[name="ecc"]:checked').value,
+      base: $("#base").value.trim() || "https://raydar.games.techmoocher.com/",
+    };
+    const list = [];
+    for (const gem of GEMS) {
+      const copies = Math.max(0, Math.min(20, +$(`#copies-${gem.id}`).value || 0));
+      for (let i = 0; i < copies; i++) list.push(gem);
+    }
+
+    let html = "";
+    let sheets = 0;
+    if (opts.layout === "fold") {
+      for (let i = 0; i < list.length; i += 2) {
+        sheets++;
+        html += `<div class="sheet">${list
+          .slice(i, i + 2)
+          .map(
+            (g) => `<div class="fold"><div class="slot">${front(g, opts)}</div><div class="slot">${back(g)}</div></div>`,
+          )
+          .join("")}<span class="fold-tag">CUT ON THE DOTS · FOLD ON THE DASHES</span></div>`;
+      }
+    } else {
+      for (let i = 0; i < list.length; i += 4) {
+        const four = list.slice(i, i + 4);
+        while (four.length < 4) four.push(null);
+        const slot = (inner) => `<div class="slot">${inner}</div>`;
+        html += `<div class="sheet grid">${four.map((g) => slot(g ? front(g, opts) : "")).join("")}</div>`;
+        // Long-edge flip swaps left and right.
+        const mirrored = [four[1], four[0], four[3], four[2]];
+        html += `<div class="sheet grid">${mirrored.map((g) => slot(g ? back(g) : "")).join("")}</div>`;
+        sheets++;
+      }
+    }
+    $("#sheets").innerHTML = html;
+    fit();
+
+    const sides = opts.layout === "fold" ? sheets : sheets * 2;
+    $("#summary").textContent = list.length
+      ? `${list.length} card${list.length === 1 ? "" : "s"} · ${sheets} sheet${sheets === 1 ? "" : "s"} of Letter paper · ${sides} printed side${sides === 1 ? "" : "s"}`
+      : "No cards selected.";
+
+    const common = [
+      "Paper: Letter. Color: black and white.",
+      "Scale: 100% / “Actual size”. Turn off “Fit to page”, or the QR shrinks.",
+    ];
+    const extra =
+      opts.layout === "fold"
+        ? ["One-sided.", "Cut along the dotted outline, fold on the dashed line with the print facing out, then glue the halves or slide the card into a matte sheet protector."]
+        : ["Two-sided, flip on long edge.", "Hold one sheet up to a window first: each back should sit behind its own front."];
+    $("#steps").innerHTML = [...common, ...extra].map((s) => `<li>${esc(s)}</li>`).join("");
+  }
+
+  // Shrink text that doesn't fit: the code word by width, Ray's note by height.
+  function fit() {
+    for (const el of document.querySelectorAll(".fit-w")) {
+      let px = 22;
+      el.style.fontSize = `${px}px`;
+      while (el.scrollWidth > el.clientWidth && px > 12) el.style.fontSize = `${--px}px`;
+    }
+    for (const el of document.querySelectorAll(".fit-h")) {
+      let px = 24;
+      el.style.fontSize = `${px}px`;
+      while (el.scrollHeight > el.clientHeight && px > 14) el.style.fontSize = `${--px}px`;
+      if (el.scrollHeight > el.clientHeight) el.closest(".card").dataset.overflow = "true";
+    }
+    const over = [...document.querySelectorAll('[data-overflow="true"] .found b')].map((b) => b.textContent);
+    if (over.length) console.warn("Card back too long to fit:", [...new Set(over)].join(", "));
+  }
+
+  // ---------- Panel ----------
+  $("#copies").innerHTML = GEMS.map((g) => {
+    const ok = Boolean(textOf(g.cardBack));
+    const missing = [!g.token && "no token", !ok && "not written"].filter(Boolean).join(", ");
+    return `<tr>
+      <td>${pad(g.n)}</td><td>${esc(g.name)}</td><td><code>${esc(g.code)}</code></td>
+      <td class="${missing ? "warn" : ""}">${missing || "ready"}</td>
+      <td><input type="number" id="copies-${g.id}" min="0" max="20" value="${g.n === 1 ? 2 : 1}" ${g.token ? "" : "disabled"} aria-label="Copies of gem ${g.n}"></td>
+    </tr>`;
+  }).join("");
+
+  $(".panel").addEventListener("input", render);
+  $("#print").addEventListener("click", () => window.print());
+
+  await document.fonts.load('16px "Press Start 2P"');
+  await document.fonts.load('16px "VT323"');
+  render();
+  document.documentElement.dataset.ready = "true";
+</script>
+</body>
+</html>

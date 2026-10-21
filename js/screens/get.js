@@ -4,7 +4,7 @@ import { el, esc, pad2 } from "../ui/dom.js";
 import { starfield, confetti } from "../ui/scenery.js";
 import { sfx } from "../audio/sfx.js";
 import * as music from "../audio/music.js";
-import { byId } from "../data/gems.js";
+import { byId, cardBackLines } from "../data/gems.js";
 import * as store from "../core/store.js";
 import { isFound, currentGem } from "../core/progress.js";
 import { go, later, redirect, trackUrl } from "../core/router.js";
@@ -53,7 +53,7 @@ export function getScreen(id) {
       await say(g.bonus, { name: "BONUS FACT" });
       if (!screen.isConnected) return;
     }
-    await say({ text: `${g.cardBack} — Ray`, mood: "proud" }, { name: "CARD BACK" });
+    await say(cardBackLines(g), { name: "CARD BACK" });
     if (!screen.isConnected) return;
     const where = await say(
       next ? `Gem ${next.n}, unlocked.| Where to next?` : "That's all twelve.|| You actually did it.",
