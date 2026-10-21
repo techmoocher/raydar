@@ -83,13 +83,13 @@ export function bookScreen() {
 
   async function savePicture(blob) {
     const how = await savePage(blob || (await renderPage()));
-    if (how === "downloaded") say("Saved your page as a picture. Check your downloads!");
+    if (how === "downloaded") say("Saved! Your page is in your downloads.");
   }
 
   screen.querySelector("[data-act=save]").addEventListener("click", async () => {
     sfx.select();
     busy(true);
-    say("Developing your page...");
+    say("Putting your page together...");
     try {
       await savePicture();
     } finally {
@@ -101,7 +101,7 @@ export function bookScreen() {
     sfx.select();
     if (!emailOn()) {
       busy(true);
-      await say("My mail truck isn't running yet. I'll save your page as a picture instead.");
+      await say("Email isn't set up yet, so I'll save your page as a picture instead.");
       try {
         await savePicture();
       } finally {
@@ -130,23 +130,23 @@ export function bookScreen() {
     }
 
     busy(true);
-    say("Licking the stamp...");
+    say("Hitting send...");
     try {
       const blob = await renderPage();
       const result = await sendPage(blob);
       if (!screen.isConnected) return;
       if (result.ok) {
         sfx.itemGet();
-        say({ text: `Sent to ${to}! Check your inbox, and the spam folder. Mail carriers hate bison.`, mood: "proud" });
+        say({ text: `Sent to ${to}! Not in your inbox? Check spam. Filters get weird about bison.`, mood: "proud" });
         return;
       }
       sfx.error();
       const why =
         result.error === "rate"
-          ? "I've already mailed that address a few times today. Give my hooves a rest and try later."
+          ? "I've already sent that address a few pages today. Give my hooves a rest and try later."
           : result.error === "invalid"
-            ? "The post office didn't like that address. Double-check it?"
-            : "The mail truck's stuck in the mud.";
+            ? "That address didn't go through. Double-check it?"
+            : "That didn't send. Campus Wi-Fi strikes again.";
       const fallback = await say(`${why} Want your page as a picture instead?`, {
         choices: [
           { label: "SAVE PAGE", value: true },

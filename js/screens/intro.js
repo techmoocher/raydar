@@ -26,11 +26,11 @@ export function introScreen() {
     if (!screen.isConnected) return;
     screen.querySelector(".walker").classList.remove("is-walking");
     await say([
-      { text: "HEY! Over here!\nHi, my name's Ray. Ray Bucknell." },
-      { text: "I've been on this hill longer than most of the bricks." },
-      { text: "I hid twelve of my cards around campus. Each one marks a gem: a spot I never want anyone to forget." },
-      { text: "Find them with me, snap a photo at each one, and we'll fill a page of my book together." },
-      { text: "First things first..." },
+      { text: "Oh! You picked up. Nobody answers unknown numbers anymore." },
+      { text: "I'm Ray. Ray Bucknell. Yes, like the school. That's a story for later." },
+      { text: "I've been on this hill longer than most of the bricks, and I've hidden twelve of my cards around campus." },
+      { text: "Each one marks a spot I don't want anyone to forget. Find them, snap a photo at each, and you get a page in my book." },
+      { text: "But first, who am I talking to?" },
     ]);
     if (!screen.isConnected) return;
     askName(screen);
@@ -44,10 +44,10 @@ function askName(screen) {
   slot.replaceChildren(
     el(`
       <form class="name-form px-box" autocomplete="off">
-        <label for="player-name">WHAT'S YOUR NAME, PLAYER?</label>
+        <label for="player-name">WHO'S ON THE LINE?</label>
         <input id="player-name" class="px-input" maxlength="12" enterkeyhint="done"
           autocapitalize="characters" spellcheck="false" placeholder="YOUR NAME" required>
-        <button class="btn btn--big btn--green" type="submit">OK!</button>
+        <button class="btn btn--big btn--green" type="submit">THAT'S ME</button>
       </form>
     `)
   );
@@ -67,13 +67,13 @@ function askName(screen) {
     });
     sfx.select();
     slot.replaceChildren();
-    await say({ text: `${name}... What a great name!`, mood: "proud" });
+    await say({ text: `${name}. Love it. Saving you in my contacts.`, mood: "proud" });
     if (!screen.isConnected) return;
     if (emailOn() && !p().emailAsked) {
       await offerEmail(slot);
       if (!screen.isConnected) return;
     }
-    await say("Our first gem is close. Real close. Let's look at the map.");
+    await say("Okay. The first gem is close. Like, really close. Let's check the map.");
     if (!screen.isConnected) return;
     const scanned = Object.keys(p().verified)[0];
     setPendingDeepLink(null);

@@ -43,7 +43,7 @@ export function titleScreen() {
   on("start", () => go("#/call"));
   on("continue", () => go("#/map"));
   on("new", async () => {
-    const ok = await say("Start over? Your photos and progress will be erased.", {
+    const ok = await say("Start over? This wipes your photos and progress.", {
       choices: [
         { label: "ERASE", value: true },
         { label: "KEEP", value: false, primary: false },
@@ -64,14 +64,14 @@ export function titleScreen() {
       sfx.error();
       await store.reset();
       go("#/title");
-      say("Save wiped. Fresh start!");
+      say("Save wiped. Clean slate!");
     }, 1200);
   });
   ["pointerup", "pointerleave", "pointercancel"].forEach((e) => logo.addEventListener(e, cancel));
   logo.addEventListener("contextmenu", (e) => e.preventDefault());
 
   if (pendingDeepLink() && !saved) {
-    later(screen, () => say("Hey, that's one of my cards! Press start and I'll explain."), 300);
+    later(screen, () => say("Ooh, you found one of my cards! Hit START and I'll fill you in."), 300);
   }
   return screen;
 }

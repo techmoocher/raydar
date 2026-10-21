@@ -19,7 +19,7 @@ export function gemScreen(id) {
         <div class="scroll">
           ${
             g.stub
-              ? `<p class="scroll__text">Ray is still writing this riddle. Check back soon!</p>`
+              ? `<p class="scroll__text">Ray's still working on this riddle. Check back soon!</p>`
               : `<p class="scroll__text">${g.riddle.map((l) => `<span>${esc(l)}</span>`).join("")}</p>`
           }
         </div>
@@ -72,9 +72,9 @@ export function gemScreen(id) {
     if (!screen.isConnected || g.stub) return;
     if (!p().tips?.gem) {
       await say([
-        "Every gem starts with one of my riddles. Read it, then go find the place.",
-        "Stuck? Tap HINT. Tap it again if you're really stuck. I won't tell.",
-        "When you're standing there, hit I FOUND IT!",
+        "Every gem starts with one of my riddles. Crack it, then go find the place.",
+        "Stuck? Tap HINT. Still stuck? Tap it again. No judgment.",
+        "Once you're standing there, hit I FOUND IT!",
       ]);
       if (!screen.isConnected) return;
       await store.update((s) => {
@@ -86,8 +86,8 @@ export function gemScreen(id) {
       if (geo.choice() === null) {
         const yes = await say(
           [
-            "One more thing. If you let me see where you are, I'll show signal bars up top.",
-            "More bars means you're getting warmer. That's all I use it for. Deal?",
+            "Quick thing. If you share your location, I'll show signal bars up top.",
+            "More bars, warmer you are. That's the only thing I use it for. Deal?",
           ],
           {
             choices: [

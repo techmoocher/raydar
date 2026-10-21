@@ -50,13 +50,13 @@ export function getScreen(id) {
     await say(g.memory);
     if (!screen.isConnected) return;
     if (g.bonus) {
-      await say(`BONUS SCROLL! ${g.bonus}`, { name: "SCROLL" });
+      await say(g.bonus, { name: "BONUS FACT" });
       if (!screen.isConnected) return;
     }
     await say({ text: `${g.cardBack} — Ray`, mood: "proud" }, { name: "CARD BACK" });
     if (!screen.isConnected) return;
     const where = await say(
-      next ? `Gem ${next.n} is unlocked. Onward!` : "That's all twelve. You did it!",
+      next ? `Gem ${next.n} unlocked. Let's keep going!` : "That's all twelve. You actually did it!",
       {
         choices: [
           { label: "MAP", value: "#/map" },

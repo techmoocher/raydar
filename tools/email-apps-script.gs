@@ -109,8 +109,8 @@ function buildEmail_(d, site) {
   var fileName = "rays-book-" + d.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".jpg";
 
   var note = all
-    ? "Here's your page in my book. You found all " + d.total + ". Every first-year walks in through the gates, every senior walks out, and now you're in my book for good."
-    : "Here's your page in my book. You found " + found + " of my " + d.total + " gems. Every photo below is a spot I never want you to forget. Come back for the rest anytime.";
+    ? "Here's your page in my book. All " + d.total + " gems, every last one. Every first-year walks in through the gates and every senior walks out, and now you're in my book for good."
+    : "Here's your page in my book. You've found " + found + " of my " + d.total + " gems so far. Every photo below is a spot I don't want you to forget. The rest are right where I left them.";
 
   var safeSite = /^https:\/\//.test(site) ? site : "";
 
@@ -187,7 +187,7 @@ function buildEmail_(d, site) {
     // Button + footer
     '<tr><td align="center" style="padding:20px 0 8px;">' + button + '</td></tr>' +
     '<tr><td align="center" style="padding:24px 8px 8px;font:12px/1.6 ' + MONO + ';color:' + C.blueHi + ';">' +
-    'RAYDAR &middot; RAY BUCKNELL&#39;S HUNT<br>You asked Ray to mail you your page from Raydar. He won\'t write again unless you ask.' +
+    'RAYDAR &middot; RAY BUCKNELL&#39;S HUNT<br>You got this because you asked Ray to send your page. He won\'t email again unless you ask.' +
     '</td></tr>' +
 
     '</table></td></tr></table></body></html>';

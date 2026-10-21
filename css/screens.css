@@ -451,10 +451,10 @@
   color: var(--orange);
 }
 
-.map__banner[data-act="1"] { background: var(--brick); color: var(--paper); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--orange-hi); }
+.map__banner[data-act="1"] { background: var(--blue); color: var(--paper); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--blue-hi); }
 .map__banner[data-act="2"] { background: var(--plum); color: var(--paper); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--stone); }
-.map__banner[data-act="3"] { background: var(--leaf); color: var(--ink); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper); }
-.map__banner[data-act="4"] { background: var(--gold); color: var(--ink); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper); }
+.map__banner[data-act="3"] { background: var(--gold); color: var(--ink); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper); }
+.map__banner[data-act="4"] { background: var(--orange); color: var(--ink); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--orange-hi); }
 
 .node {
   position: absolute;
@@ -618,10 +618,10 @@
   box-shadow: 0 0 0 var(--px) var(--ink);
 }
 
-.gem__kicker[data-act="1"] { background: var(--brick); color: var(--paper); }
+.gem__kicker[data-act="1"] { background: var(--blue); color: var(--paper); }
 .gem__kicker[data-act="2"] { background: var(--plum); color: var(--paper); }
-.gem__kicker[data-act="3"] { background: var(--leaf); }
-.gem__kicker[data-act="4"] { background: var(--gold); }
+.gem__kicker[data-act="3"] { background: var(--gold); }
+.gem__kicker[data-act="4"] { background: var(--orange); }
 
 .scroll {
   position: relative;

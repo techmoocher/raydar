@@ -1,8 +1,9 @@
 # Raydar
 
-An 8-bit scavenger hunt around Bucknell, guided by Ray Bucknell, a pixel-art
-bison with a few stories to tell. Solve a riddle, find Ray's card, and take a
-photo to add a memory to his book.
+An 8-bit scavenger hunt around Bucknell. It starts with a call from Ray
+Bucknell, a pixel-art bison who's been on this hill longer than most of the
+bricks. Crack his riddles, find the cards he's hidden, and snap a photo at
+each stop to fill your page in his book.
 
 Built for the Bucknell App Makerspace **Hidden Gems: The Best of Bucknell**
 contest in October 2026. Open it on your phone; there's nothing to install

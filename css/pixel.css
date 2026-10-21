@@ -545,10 +545,10 @@ input {
   box-shadow: 0 0 0 2px var(--paper);
 }
 
-.hud[data-act="1"] .hud__world { background: var(--brick); color: var(--paper); }
+.hud[data-act="1"] .hud__world { background: var(--blue); color: var(--paper); }
 .hud[data-act="2"] .hud__world { background: var(--plum); color: var(--paper); }
-.hud[data-act="3"] .hud__world { background: var(--leaf); }
-.hud[data-act="4"] .hud__world { background: var(--gold); }
+.hud[data-act="3"] .hud__world { background: var(--gold); }
+.hud[data-act="4"] .hud__world { background: var(--orange); }
 
 .hud__gems {
   display: inline-flex;

@@ -126,9 +126,9 @@ export function mapScreen() {
     later(screen, async () => {
       if (!screen.isConnected) return;
       await say([
-        "This is my map of campus. Twelve gems, one path.",
-        "The orange spot is our next gem. Where is it? That's for you to figure out.",
-        "Tap READ RAY'S RIDDLE when you're ready.",
+        "Here's my map. Twelve gems, one trail across campus.",
+        "The orange spot is up next. Where is it? That's the fun part.",
+        "Tap READ RAY'S RIDDLE whenever you're ready.",
       ]);
       store.update((s) => {
         s.tips = { ...s.tips, map: true };

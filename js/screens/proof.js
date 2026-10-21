@@ -61,13 +61,13 @@ export function proofScreen(id) {
     if (g.geo) {
       await say([
         { text: "Somebody walked off with my card? Rude.", mood: "spooky" },
-        "No problem. Snap a photo of the gem itself and I'll check you're standing there.",
+        "No worries. Snap a photo of the place itself and I'll check you're actually there.",
       ]);
     } else {
       await say([
         { text: "Somebody walked off with my card? Rude.", mood: "spooky" },
         `Here's my biggest hint: ${g.hints[g.hints.length - 1]}`,
-        "If you're standing there, snap a photo of it and I'll take your word for it.",
+        "If you're standing there, snap a photo and I'll take your word for it.",
       ]);
     }
     if (photo && screen.isConnected) await unlockMissing();
@@ -108,13 +108,13 @@ export function proofScreen(id) {
       const other = byId(hit.id);
       say(
         isFound(other.id)
-          ? `Ha! That's my card for ${other.name}. You've already got that one.`
-          : `Ha! That's my card for ${gemLabel(other)}. Remember this spot, you'll be back. This gem's card is somewhere else.`
+          ? `Ha, that's my card for ${other.name}. You already got that one!`
+          : `Wait, that's my card for ${gemLabel(other)}. Wrong stop, but remember it. You'll be back. This gem's card is somewhere else.`
       );
       return;
     }
     sfx.error();
-    await say("Ray's handwriting is smudged. Type the word under the code.");
+    await say("I can't read the code in that one. Just type the word printed under it.");
     if (screen.isConnected) showCodeForm();
   });
 
@@ -151,9 +151,9 @@ export function proofScreen(id) {
       if (owner && owner.id !== g.id) {
         say(`That's the word from my ${gemLabel(owner)} card. Wrong gem, right idea!`);
       } else if (wrongCodes >= 3) {
-        say("Still not it. It's one word, printed big under the square code. Spelling counts, spaces don't.");
+        say("Still not it. It's the one big word right under the square code. Spelling counts, spaces don't.");
       } else {
-        say("Hmm, that's not it. Check the word under the code.");
+        say("Hmm, not quite. Check the word under the code.");
       }
     });
   }
@@ -164,10 +164,10 @@ export function proofScreen(id) {
         const pos = await geo.here();
         if (geo.distance(pos, g.geo) <= g.geo.r + Math.min(pos.acc || 0, 50)) return unlock("gps");
         sfx.error();
-        say("My map says you're not quite there yet. Get a little closer and snap again.");
+        say("My map says you're not quite there. Get a little closer and try again.");
       } catch {
         sfx.error();
-        say("I can't tell where you are. Type the word under the code if you find the card.");
+        say("I can't tell where you are. If you find the card, type the word under the code.");
         showCodeForm();
       }
       return;
@@ -189,10 +189,10 @@ export function proofScreen(id) {
     if (!screen.isConnected) return;
     say(
       verified()
-        ? "My card checks out! Now snap a photo of it in front of the gem. That's your memory for the book."
+        ? "Card checks out! Now snap it in front of the gem. That's your photo for the book."
         : [
-            "Hold my card up in front of it and snap a photo.",
-            "Get the gem in the background. That photo goes in your page of my book.",
+            "Hold my card up in front of the gem and snap a photo.",
+            "Get the place in the shot behind it. That photo goes on your page in my book.",
           ]
     );
   }, 300);

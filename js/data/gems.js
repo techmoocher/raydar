@@ -3,7 +3,7 @@
 
 export const ACTS = {
   1: "BEFORE RAY HAD A NAME",
-  2: "RAY'S GHOSTS AND SCARS",
+  2: "GHOSTS AND SCARS",
   3: "RAY'S BUCKNELL",
   4: "FINALE",
 };
@@ -28,13 +28,13 @@ export const GEMS = [
     token: "k7q2",
     geo: null,
     memory: [
-      { text: "This was once the whole university. One building, 1849.", mood: "wistful" },
-      { text: "They called it the University at Lewisburg.", mood: "wistful" },
-      { text: "Yet, many students have to pull out Google Maps whenever they want to get here.", mood: "happy" },
+      { text: "In 1849, this one building was the whole university.", mood: "wistful" },
+      { text: "It wasn't even Bucknell back then. Everyone called it the University at Lewisburg.", mood: "wistful" },
+      { text: "First building on the hill, and half of campus still needs Google Maps to find it.", mood: "happy" },
     ],
     bonus: null,
     cardBack:
-      "You made it. In 1849, this was everything: classrooms, dreams, a lot of mud. They didn't call it Bucknell yet. Give them 37 years.",
+      "You made it. In 1849, this was everything: classrooms, big dreams, a lot of mud. Nobody called it Bucknell yet. Give it 37 years.",
   },
 
   // Stubs: content not ported yet.
