@@ -1,7 +1,7 @@
-import { EMAIL_ENDPOINT } from "./config.js";
-import { GEMS } from "./data/gems.js";
-import * as store from "./store.js";
-import { stamp } from "./report.js";
+import { EMAIL_ENDPOINT } from "../config.js";
+import { GEMS } from "../data/gems.js";
+import * as store from "../core/store.js";
+import { stamp } from "./page.js";
 
 export const emailOn = () => Boolean(EMAIL_ENDPOINT);
 
@@ -24,9 +24,10 @@ export async function sendPage(pageBlob) {
     to: p.email.trim(),
     name: p.name,
     total: GEMS.length,
+    // Unfound names stay on the phone; the email shows them as ???.
     gems: GEMS.map((g) => ({
       n: g.n,
-      name: g.name,
+      name: p.found[g.id] ? g.name : "",
       found: Boolean(p.found[g.id]),
       at: p.found[g.id] ? stamp(p.found[g.id].at) : "",
     })),

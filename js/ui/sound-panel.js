@@ -1,5 +1,5 @@
-import * as music from "./music.js";
-import { sfx, unlock, isOn as sfxOn, setOn as setSfx } from "./sfx.js";
+import * as music from "../audio/music.js";
+import { sfx, unlock, isOn as sfxOn, setOn as setSfx } from "../audio/sfx.js";
 import { icon } from "./sprites.js";
 
 let panel = null;

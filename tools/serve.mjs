@@ -1,4 +1,4 @@
-// Dev server with a mock mailer. See README.md.
+// Dev server with a mock mailer. Setup: docs branch, #local-setup.
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";

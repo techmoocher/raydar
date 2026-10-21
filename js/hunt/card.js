@@ -1,5 +1,5 @@
 import { toCanvas, sizeOf } from "./photo.js";
-import { byId } from "./data/gems.js";
+import { byId } from "../data/gems.js";
 
 let jsQRReady = null;
 
@@ -8,7 +8,7 @@ function loadJsQR() {
   if (window.jsQR) return Promise.resolve(window.jsQR);
   jsQRReady ??= new Promise((res, rej) => {
     const s = document.createElement("script");
-    s.src = new URL("../vendor/jsQR-1.4.0.js", import.meta.url).href;
+    s.src = new URL("../../vendor/jsQR-1.4.0.js", import.meta.url).href;
     s.onload = () => res(window.jsQR);
     s.onerror = rej;
     document.head.appendChild(s);

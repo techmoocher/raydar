@@ -767,12 +767,33 @@
   gap: var(--s6) var(--s4);
 }
 
-.book__grid .polaroid:nth-child(odd) {
+.book__grid > :nth-child(odd) {
   transform: rotate(-2deg);
 }
 
-.book__grid .polaroid:nth-child(even) {
+.book__grid > :nth-child(even) {
   transform: rotate(2deg);
+}
+
+.polaroid-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.polaroid-btn:active .polaroid {
+  transform: translateY(var(--px));
+}
+
+.book__tip {
+  margin: calc(var(--s4) * -1) 0 var(--s6);
+  font-size: 20px;
+  color: var(--blue);
 }
 
 .polaroid__frame {
@@ -842,7 +863,7 @@
 
 .polaroid--empty {
   background: transparent;
-  color: var(--stone);
+  color: var(--blue-hi);
   box-shadow: none;
   outline: var(--px) dashed var(--stone);
   outline-offset: calc(var(--px) * -1);
@@ -853,7 +874,7 @@
 }
 
 .polaroid--empty .polaroid__frame .pixel {
-  color: var(--stone);
+  color: var(--blue-hi);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -871,9 +892,10 @@
 }
 
 .email-slot:not(:empty) {
-  margin-top: var(--s6);
+  margin-bottom: var(--s6);
 }
 
-.book__actions {
-  margin-top: var(--s8);
+/* Clears the fixed dock so the last row of photos stays visible. */
+.book .screen__body {
+  padding-bottom: calc(200px + env(safe-area-inset-bottom));
 }

@@ -1,7 +1,7 @@
 // Typewriter dialogue box: tap to finish a line, tap again to advance.
 
 import { ray } from "./sprites.js";
-import { sfx } from "./sfx.js";
+import { sfx } from "../audio/sfx.js";
 
 const CPS = 40;
 const reducedMotion = () =>
@@ -9,7 +9,7 @@ const reducedMotion = () =>
 
 let current = null;
 
-// lines: string | {text, mood} | an array of them.
+// lines: string | {text, mood, name} | an array of them.
 // opts.choices: [{label, value, primary}]; resolves with the chosen value.
 export function say(lines, opts = {}) {
   close();
@@ -33,6 +33,7 @@ export function say(lines, opts = {}) {
   document.body.appendChild(box);
 
   const portrait = box.querySelector(".dialogue__portrait");
+  const nameEl = box.querySelector(".dialogue__name");
   const textEl = box.querySelector(".dialogue__text");
   const choicesEl = box.querySelector(".dialogue__choices");
 
@@ -76,6 +77,7 @@ export function say(lines, opts = {}) {
       if (i >= list.length) return done(undefined);
       const line = list[i];
       full = line.text;
+      nameEl.textContent = line.name || opts.name || "RAY BUCKNELL";
       portrait.innerHTML = ray(64, line.mood || opts.mood || "happy");
       box.classList.remove("is-done");
       choicesEl.innerHTML = "";

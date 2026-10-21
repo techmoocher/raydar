@@ -1,1 +1,15 @@
+# Agent files: see AGENTS.md, "Where helper files go".
 .agents/
+.codex/
+.gemini/
+.cursor/
+.aws/
+.worktrees/
+
+.claude/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+
+.DS_Store
+Thumbs.db

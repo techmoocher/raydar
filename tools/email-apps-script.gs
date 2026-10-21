@@ -1,4 +1,4 @@
-// Emails a player their page of Ray's book. Setup: see README.md.
+// Emails a player their page of Ray's book. Setup: docs branch, #email.
 
 var MAX_PER_ADDRESS = 3;
 var WINDOW_SECONDS = 6 * 60 * 60;

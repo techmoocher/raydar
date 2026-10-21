@@ -1,6 +1,6 @@
 // Falls back to memory when IndexedDB is unavailable.
 
-import * as idb from "../vendor/idb-keyval-6.2.1.js";
+import * as idb from "../../vendor/idb-keyval-6.2.1.js";
 
 const PROGRESS = "progress";
 const photoKey = (id) => `photo:${id}`;
@@ -22,6 +22,7 @@ const blank = () => ({
   emailAsked: false,
   found: {}, // id -> { at, method }
   verified: {}, // id -> true after a card deep link
+  hints: {}, // id -> how many hints the player has revealed
   seenIntro: false,
 });
 

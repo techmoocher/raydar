@@ -1,7 +1,7 @@
-import { GEMS } from "./data/gems.js";
-import * as store from "./store.js";
-import { loadImage } from "./photo.js";
-import { paintRay, paintGem } from "./sprites.js";
+import { GEMS } from "../data/gems.js";
+import * as store from "../core/store.js";
+import { loadImage } from "../hunt/photo.js";
+import { paintRay, paintGem } from "../ui/sprites.js";
 
 const W = 1080;
 const H = 1920;
