@@ -2,12 +2,16 @@
 
 import { ray, gem as gemSprite, lock } from "./sprites.js";
 import { say, close as closeDialogue } from "./dialogue.js";
-import { sfx, unlock as unlockAudio, isOn as soundOn, setOn as setSound } from "./sfx.js";
+import { sfx, unlock as unlockAudio } from "./sfx.js";
+import * as music from "./music.js";
+import { soundButton, close as closeSoundPanel } from "./sound-panel.js";
 import { GEMS, ACTS, byId } from "./data/gems.js";
 import * as store from "./store.js";
 import * as proof from "./proof.js";
 import * as geo from "./geo.js";
 import { loadImage, toKeepsake } from "./photo.js";
+import { renderPage, savePage } from "./report.js";
+import { emailOn, validEmail, sendPage } from "./email.js";
 
 const app = document.getElementById("app");
 const reducedMotion = () =>
@@ -77,31 +81,50 @@ function starfield(count = 48) {
   for (let i = 0; i < count; i++) {
     const x = Math.floor(Math.random() * 100);
     const y = Math.floor(Math.random() * 100);
-    const cls = [Math.random() < 0.4 ? "dim" : "", Math.random() < 0.25 ? "tw" : ""].join(" ");
+    const r = Math.random();
+    const cls = [r < 0.35 ? "dim" : r < 0.5 ? "gold" : "", Math.random() < 0.25 ? "tw" : ""].join(" ");
     const delay = (Math.random() * 1.6).toFixed(1);
     s += `<i class="${cls}" style="left:${x}%;top:${y}%;animation-delay:-${delay}s"></i>`;
   }
   return `<div class="stars" aria-hidden="true">${s}</div>`;
 }
 
+// Grass tufts and a few flowers scattered over the map's ground.
+function meadow(count = 40) {
+  let s = "";
+  for (let i = 0; i < count; i++) {
+    const x = Math.floor(Math.random() * 96);
+    const y = Math.floor(Math.random() * 100);
+    const r = Math.random();
+    const cls = r < 0.12 ? "flower flower--gold" : r < 0.22 ? "flower flower--cherry" : "tuft";
+    s += `<i class="${cls}" style="left:${x}%;top:${y}%"></i>`;
+  }
+  return `<div class="meadow" aria-hidden="true">${s}</div>`;
+}
+
+// Pixel ground along the bottom of the title: grass, flowers, a brick hall.
+function ground() {
+  return `
+    <div class="ground" aria-hidden="true">
+      <div class="ground__hall"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <i class="flower flower--gold" style="left:12%"></i>
+      <i class="flower flower--cherry" style="left:22%"></i>
+      <i class="flower flower--gold" style="left:78%"></i>
+      <i class="flower flower--cherry" style="left:88%"></i>
+    </div>`;
+}
+
 // HUD: WORLD 1 · GEMS 01/12 · ▂▄▆█ · ♪
 function hud(g) {
   const bar = el(`
-    <header class="hud">
-      <span>WORLD ${worldOf(g)}</span>
+    <header class="hud" data-act="${worldOf(g)}">
+      <span class="hud__world">WORLD ${worldOf(g)}</span>
       <span class="hud__sep" aria-hidden="true">·</span>
-      <span>GEMS ${pad2(foundCount())}/${GEMS.length}</span>
+      <span class="hud__gems">GEMS ${pad2(foundCount())}/${GEMS.length}</span>
       <span class="hud__bars" hidden aria-label="Signal"></span>
-      <button class="hud__sound" type="button" aria-label="Sound" aria-pressed="${soundOn()}">♪</button>
     </header>
   `);
-  const btn = bar.querySelector(".hud__sound");
-  btn.addEventListener("click", () => {
-    unlockAudio();
-    setSound(!soundOn());
-    btn.setAttribute("aria-pressed", soundOn());
-    sfx.tick();
-  });
+  bar.appendChild(soundButton("hud__sound"));
   return bar;
 }
 
@@ -146,8 +169,10 @@ function titleScreen() {
         }
       </div>
       <p class="title__copy">© 1846 RAY BUCKNELL</p>
+      ${ground()}
     </section>
   `);
+  screen.appendChild(soundButton("title__sound"));
 
   const on = (act, fn) =>
     screen.querySelector(`[data-act=${act}]`)?.addEventListener("click", () => {
@@ -232,7 +257,7 @@ function askName(screen) {
         <label for="player-name">WHAT'S YOUR NAME, PLAYER?</label>
         <input id="player-name" class="px-input" maxlength="12" enterkeyhint="done"
           autocapitalize="characters" spellcheck="false" placeholder="YOUR NAME" required>
-        <button class="btn btn--big" type="submit">OK!</button>
+        <button class="btn btn--big btn--green" type="submit">OK!</button>
       </form>
     `)
   );
@@ -252,16 +277,91 @@ function askName(screen) {
     });
     sfx.select();
     slot.replaceChildren();
-    await say([
-      { text: `${name}! Great name. I'll remember it.`, mood: "proud" },
-      { text: "Our first gem is close. Real close. Let's look at the map." },
-    ]);
+    await say({ text: `${name}! Great name. I'll remember it.`, mood: "proud" });
+    if (!screen.isConnected) return;
+    if (emailOn() && !p().emailAsked) {
+      await offerEmail(slot);
+      if (!screen.isConnected) return;
+    }
+    await say("Our first gem is close. Real close. Let's look at the map.");
     if (!screen.isConnected) return;
     // A card scanned with the phone's camera before the player had a save.
     const scanned = Object.keys(p().verified)[0];
     pendingDeepLink = null;
     go(scanned ? `#/proof/${scanned}` : "#/map");
   });
+}
+
+// ---------- email ----------
+
+// The email field. Resolves with the saved address, or null if skipped.
+function emailForm(slot, { skipLabel = "SKIP" } = {}) {
+  slot.replaceChildren(
+    el(`
+      <form class="name-form email-form px-box" autocomplete="on" novalidate>
+        <label for="player-email">WHERE SHOULD RAY SEND IT?</label>
+        <input id="player-email" class="px-input px-input--email" type="email" name="email"
+          autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"
+          enterkeyhint="done" maxlength="254" placeholder="you@bucknell.edu" value="${esc(p().email)}">
+        <p class="fineprint">Only used to send you your page. Never stored or shared.</p>
+        <div class="form-row">
+          <button class="btn btn--blue" type="button" data-act="skip">${skipLabel}</button>
+          <button class="btn btn--green" type="submit">SAVE</button>
+        </div>
+      </form>
+    `)
+  );
+  const form = slot.querySelector("form");
+  const input = form.querySelector("input");
+  input.focus({ preventScroll: true });
+  input.addEventListener("input", () => sfx.blip());
+  return new Promise((resolve) => {
+    form.querySelector("[data-act=skip]").addEventListener("click", () => {
+      sfx.tick();
+      slot.replaceChildren();
+      resolve(null);
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = input.value.trim();
+      if (!validEmail(email)) {
+        sfx.error();
+        say("Hmm, that address looks off. Something like you@bucknell.edu?");
+        input.focus();
+        return;
+      }
+      await store.update((s) => {
+        s.email = email;
+      });
+      sfx.select();
+      slot.replaceChildren();
+      resolve(email);
+    });
+  });
+}
+
+// Asked once, right after the name. Optional either way.
+async function offerEmail(slot) {
+  const yes = await say("Want me to mail you your page of my book? Photos, times, the works. Totally optional.", {
+    choices: [
+      { label: "SURE", value: true },
+      { label: "NO THANKS", value: false, primary: false },
+    ],
+  });
+  await store.update((s) => {
+    s.emailAsked = true;
+  });
+  if (!slot.isConnected) return;
+  if (yes) {
+    closeDialogue();
+    const email = await emailForm(slot);
+    if (!slot.isConnected) return;
+    if (email) {
+      await say("Got it. Whenever you want it, hit EMAIL MY PAGE in my book.");
+      return;
+    }
+  }
+  await say("No problem. My book's always open if you change your mind.");
 }
 
 // ---------- map ----------
@@ -274,7 +374,7 @@ function mapScreen() {
   const cur = currentGem();
   const screen = el(`
     <section class="screen map" aria-label="Map">
-      ${starfield(36)}
+      ${meadow(48)}
     </section>
   `);
   screen.prepend(hud(cur));
@@ -309,7 +409,7 @@ function mapScreen() {
   items.forEach((it) => {
     if (it.type === "banner") {
       const label = it.act === 4 ? ACTS[4] : `WORLD ${it.act}: ${ACTS[it.act]}`;
-      world.appendChild(el(`<h2 class="map__banner" style="top:${it.y}px">${esc(label)}</h2>`));
+      world.appendChild(el(`<h2 class="map__banner" data-act="${it.act}" style="top:${it.y}px">${esc(label)}</h2>`));
       return;
     }
     const { g } = it;
@@ -379,7 +479,7 @@ function gemScreen(id) {
   const screen = el(`
     <section class="screen gem" aria-label="${esc(g.name)}">
       <div class="screen__body">
-        <p class="gem__kicker pixel">GEM ${pad2(g.n)}/${GEMS.length}</p>
+        <p class="gem__kicker pixel" data-act="${g.act}">GEM ${pad2(g.n)}/${GEMS.length}</p>
         <div class="scroll">
           ${
             g.stub
@@ -389,7 +489,7 @@ function gemScreen(id) {
         </div>
         <div class="hints" aria-live="polite"></div>
         <div class="gem__actions">
-          ${g.stub ? "" : `<button class="btn btn--blue" type="button" data-act="hint">HINT</button>`}
+          ${g.stub ? "" : `<button class="btn btn--gold" type="button" data-act="hint">HINT</button>`}
           <button class="btn btn--big" type="button" data-act="found" ${g.stub ? "disabled" : ""}>I FOUND IT!</button>
           <button class="btn btn--blue" type="button" data-act="map">MAP</button>
         </div>
@@ -474,7 +574,7 @@ function proofScreen(id) {
   const screen = el(`
     <section class="screen proof" aria-label="Prove it">
       <div class="screen__body">
-        <p class="gem__kicker pixel">GEM ${pad2(g.n)} · ${esc(g.name)}</p>
+        <p class="gem__kicker pixel" data-act="${g.act}">GEM ${pad2(g.n)} · ${esc(g.name)}</p>
         <div class="viewfinder" aria-live="polite">
           <div class="viewfinder__empty">
             <span class="viewfinder__card">${ray(48)}<span class="pixel">RAY'S CARD</span></span>
@@ -575,7 +675,7 @@ function proofScreen(id) {
           <label for="code" class="pixel">THE WORD UNDER THE CODE</label>
           <input id="code" class="px-input" maxlength="16" autocapitalize="characters"
             spellcheck="false" enterkeyhint="go" placeholder="CODE">
-          <button class="btn btn--big" type="submit">UNLOCK</button>
+          <button class="btn btn--big btn--green" type="submit">UNLOCK</button>
         </form>
       `)
     );
@@ -590,6 +690,9 @@ function proofScreen(id) {
       if (proof.codeOk(g, typed)) return unlock("code");
       sfx.error();
       wrongCodes++;
+      field.classList.remove("is-wrong");
+      void field.offsetWidth; // restart the shake
+      field.classList.add("is-wrong");
       const owner = proof.codeOwner(typed, GEMS);
       if (owner && owner.id !== g.id) {
         say(`That's the word from my ${owner.name} card. Wrong gem, right idea!`);
@@ -645,6 +748,20 @@ function proofScreen(id) {
 
 // ---------- ITEM GET ----------
 
+// Flat pixel confetti that falls in frame steps.
+const CONFETTI = ["gold", "cherry", "leaf", "plum", "gem", "orange", "paper"];
+function confetti(count = 36) {
+  let s = "";
+  for (let i = 0; i < count; i++) {
+    const x = Math.floor(Math.random() * 100);
+    const delay = (Math.random() * 0.6).toFixed(2);
+    const dur = (1.4 + Math.random() * 1.2).toFixed(2);
+    const size = Math.random() < 0.3 ? 12 : 8;
+    s += `<i style="left:${x}%;width:${size}px;height:${size}px;background:var(--${CONFETTI[i % CONFETTI.length]});animation-delay:${delay}s;animation-duration:${dur}s"></i>`;
+  }
+  return `<div class="confetti" aria-hidden="true">${s}</div>`;
+}
+
 function getScreen(id) {
   const g = byId(id);
   if (!g || !isFound(g.id)) return redirect("#/map");
@@ -654,6 +771,7 @@ function getScreen(id) {
     <section class="screen get" aria-label="Item get">
       ${starfield(40)}
       <div class="flash" aria-hidden="true"></div>
+      ${confetti()}
       <div class="get__stage">
         <div class="get__gem"><div class="spin">${gemSprite(96)}</div></div>
         <p class="get__label pixel">YOU FOUND:</p>
@@ -675,7 +793,10 @@ function getScreen(id) {
     fig.hidden = false;
   });
 
-  later(screen, () => sfx.itemGet(), 150);
+  later(screen, () => {
+    music.duck(2.2);
+    sfx.itemGet();
+  }, 150);
 
   later(screen, async () => {
     if (!screen.isConnected) return;
@@ -726,8 +847,11 @@ function bookScreen() {
         <h1 class="book__title pixel">RAY'S BOOK</h1>
         <p class="book__sub">${esc(name)}'s page · ${pad2(foundCount())}/${GEMS.length} gems</p>
         <div class="book__grid"></div>
-        <div class="gem__actions">
-          <button class="btn btn--big" type="button" data-act="map">BACK TO MAP</button>
+        <div class="email-slot"></div>
+        <div class="gem__actions book__actions">
+          <button class="btn btn--big" type="button" data-act="email">EMAIL MY PAGE</button>
+          <button class="btn btn--blue" type="button" data-act="save">SAVE PAGE</button>
+          <button class="btn btn--blue" type="button" data-act="map">MAP</button>
         </div>
       </div>
     </section>
@@ -738,7 +862,7 @@ function bookScreen() {
   GEMS.forEach((g) => {
     const f = p().found[g.id];
     const fig = el(`
-      <figure class="polaroid ${f ? "" : "polaroid--empty"}">
+      <figure class="polaroid ${f ? "" : "polaroid--empty"}" data-tape="${g.n % 5}">
         <div class="polaroid__frame">${f ? "" : `<span class="pixel">?</span>`}</div>
         <figcaption>
           <span class="pixel">${pad2(g.n)} ${f ? esc(g.name) : "???"}</span>
@@ -761,6 +885,87 @@ function bookScreen() {
   });
 
   screen.querySelector("[data-act=map]").addEventListener("click", () => go("#/map"));
+
+  const actions = screen.querySelectorAll(".book__actions .btn");
+  const busy = (on) => actions.forEach((b) => (b.disabled = on));
+  const emailSlot = screen.querySelector(".email-slot");
+
+  async function savePicture(blob) {
+    const how = await savePage(blob || (await renderPage()));
+    if (how === "downloaded") say("Saved your page as a picture. Check your downloads!");
+  }
+
+  screen.querySelector("[data-act=save]").addEventListener("click", async () => {
+    sfx.select();
+    busy(true);
+    say("Developing your page...");
+    try {
+      await savePicture();
+    } finally {
+      busy(false);
+    }
+  });
+
+  screen.querySelector("[data-act=email]").addEventListener("click", async () => {
+    sfx.select();
+    if (!emailOn()) {
+      busy(true);
+      await say("My mail truck isn't running yet. I'll save your page as a picture instead.");
+      try {
+        await savePicture();
+      } finally {
+        busy(false);
+      }
+      return;
+    }
+
+    let to = p().email;
+    if (to) {
+      const pick = await say(`Send your page to ${to}?`, {
+        choices: [
+          { label: "SEND", value: "send" },
+          { label: "CHANGE", value: "change", primary: false },
+        ],
+      });
+      if (!screen.isConnected || !pick) return;
+      if (pick === "change") to = null;
+    }
+    if (!to) {
+      closeDialogue();
+      to = await emailForm(emailSlot, { skipLabel: "CANCEL" });
+      if (!to || !screen.isConnected) return;
+    }
+
+    busy(true);
+    say("Licking the stamp...");
+    try {
+      const blob = await renderPage();
+      const result = await sendPage(blob);
+      if (!screen.isConnected) return;
+      if (result.ok) {
+        sfx.itemGet();
+        say({ text: `Sent to ${to}! Check your inbox, and the spam folder. Mail carriers hate bison.`, mood: "proud" });
+        return;
+      }
+      sfx.error();
+      const why =
+        result.error === "rate"
+          ? "I've already mailed that address a few times today. Give my hooves a rest and try later."
+          : result.error === "invalid"
+            ? "The post office didn't like that address. Double-check it?"
+            : "The mail truck's stuck in the mud.";
+      const fallback = await say(`${why} Want your page as a picture instead?`, {
+        choices: [
+          { label: "SAVE PAGE", value: true },
+          { label: "NO THANKS", value: false, primary: false },
+        ],
+      });
+      if (fallback && screen.isConnected) await savePicture(blob);
+    } finally {
+      busy(false);
+    }
+  });
+
   return screen;
 }
 
@@ -804,6 +1009,17 @@ const routes = [
 
 let first = true;
 
+// Which track each screen plays. Same track = keeps playing across screens.
+const SCREEN_MUSIC = {
+  title: "title",
+  intro: "title",
+  map: "overworld",
+  gem: "riddle",
+  proof: "riddle",
+  get: "overworld",
+  book: "overworld",
+};
+
 async function render() {
   const hash = location.hash || "#/";
   leaveHooks.forEach((fn) => fn());
@@ -827,10 +1043,21 @@ async function render() {
   first = false;
   app.replaceChildren(); // detach first so pending dialogue continuations bail out
   closeDialogue();
+  closeSoundPanel();
   app.appendChild(screen);
   window.scrollTo(0, 0);
+  music.play(SCREEN_MUSIC[location.hash.split("/")[1] || "title"] || "overworld");
   screen._enter?.forEach((fn) => fn());
 }
 
 window.addEventListener("hashchange", render);
+
+// Phones only allow audio after a tap, so the first tap anywhere unlocks it
+// (and starts the music if it's on).
+const firstTap = () => {
+  unlockAudio();
+  ["click", "touchend", "keydown"].forEach((e) => document.removeEventListener(e, firstTap, true));
+};
+["click", "touchend", "keydown"].forEach((e) => document.addEventListener(e, firstTap, true));
+
 store.init().then(render);

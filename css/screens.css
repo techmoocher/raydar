@@ -34,7 +34,8 @@
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  padding: var(--s6) var(--s4) calc(var(--s6) + env(safe-area-inset-bottom));
+  /* Bottom padding leaves room for the ground strip and the hall. */
+  padding: var(--s6) var(--s4) calc(176px + env(safe-area-inset-bottom));
 }
 
 .stars {
@@ -52,6 +53,10 @@
 
 .stars i.dim {
   background: var(--blue-hi);
+}
+
+.stars i.gold {
+  background: var(--gold);
 }
 
 .stars i.tw {
@@ -129,13 +134,93 @@
   cursor: pointer;
 }
 
+.title__sound {
+  position: absolute;
+  top: calc(var(--s2) + env(safe-area-inset-top));
+  right: var(--s2);
+  z-index: 2;
+}
+
 .title__copy {
   position: relative;
+  z-index: 1;
   margin-top: var(--s8);
   font-family: var(--font-pixel);
   font-size: var(--fs-pixel-s);
-  color: var(--blue-hi);
+  color: var(--paper);
+  text-shadow: 2px 2px 0 var(--ink);
 }
+
+/* Ground along the bottom of the title: grass band, flowers, a brick hall. */
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72px;
+  background: var(--leaf-dk);
+  border-top: var(--px) solid var(--leaf);
+  box-shadow: 0 calc(var(--px) * -2) 0 var(--ink);
+}
+
+.ground .flower {
+  top: 16px;
+}
+
+.ground__hall {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 112px;
+  height: 56px;
+  margin-left: -56px;
+  margin-bottom: calc(var(--px) * 2);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px 14px 6px;
+  background: var(--brick);
+  box-shadow: 0 0 0 var(--px) var(--ink);
+}
+
+/* Roof: a stepped pixel gable built from box-shadow blocks. */
+.ground__hall::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  margin-bottom: 20px;
+  background: var(--stone);
+  box-shadow:
+    -8px 8px 0 var(--stone), 0 8px 0 var(--stone), 8px 8px 0 var(--stone),
+    -16px 16px 0 var(--stone), -8px 16px 0 var(--stone), 0 16px 0 var(--stone), 8px 16px 0 var(--stone), 16px 16px 0 var(--stone);
+}
+
+.ground__hall i {
+  background: var(--gold);
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.flower {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+}
+
+.flower::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    -4px 0 0 var(--c), 4px 0 0 var(--c), 0 -4px 0 var(--c), 0 4px 0 var(--c),
+    0 8px 0 var(--leaf), 0 12px 0 var(--leaf);
+}
+
+.flower--gold { --c: var(--gold); background: var(--paper); }
+.flower--cherry { --c: var(--cherry); background: var(--gold); }
 
 /* ---------- Intro ---------- */
 
@@ -187,6 +272,21 @@
 
 .map {
   overflow-x: hidden;
+  background: var(--leaf-dk);
+}
+
+.meadow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.meadow .tuft {
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  background: var(--leaf);
+  box-shadow: -4px 4px 0 var(--leaf), 4px 4px 0 var(--leaf);
 }
 
 .map__body {
@@ -207,7 +307,7 @@
 
 .map__path polyline {
   fill: none;
-  stroke: var(--blue-hi);
+  stroke: var(--paper);
   stroke-width: 8;
   stroke-dasharray: 8 8;
   vector-effect: non-scaling-stroke;
@@ -228,6 +328,12 @@
   text-align: center;
   color: var(--orange);
 }
+
+/* Each act has its own banner color. */
+.map__banner[data-act="1"] { background: var(--brick); color: var(--paper); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--orange-hi); }
+.map__banner[data-act="2"] { background: var(--plum); color: var(--paper); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--stone); }
+.map__banner[data-act="3"] { background: var(--leaf); color: var(--ink); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper); }
+.map__banner[data-act="4"] { background: var(--gold); color: var(--ink); box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper); }
 
 .node {
   position: absolute;
@@ -287,8 +393,13 @@
   text-shadow: 2px 2px 0 var(--ink);
 }
 
+.node--locked .node__pad {
+  background: var(--stone);
+  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper);
+}
+
 .node--locked .node__label {
-  color: var(--blue-hi);
+  color: var(--stone);
 }
 
 .node__ray {
@@ -319,10 +430,19 @@
 /* ---------- Gem (riddle) ---------- */
 
 .gem__kicker {
+  display: inline-block;
   margin: var(--s2) var(--px) var(--s4);
+  padding: var(--s1) var(--s2);
   font-size: var(--fs-pixel-s);
-  color: var(--orange-hi);
+  color: var(--ink);
+  background: var(--orange-hi);
+  box-shadow: 0 0 0 var(--px) var(--ink);
 }
+
+.gem__kicker[data-act="1"] { background: var(--brick); color: var(--paper); }
+.gem__kicker[data-act="2"] { background: var(--plum); color: var(--paper); }
+.gem__kicker[data-act="3"] { background: var(--leaf); }
+.gem__kicker[data-act="4"] { background: var(--gold); }
 
 /* Scroll: paper sheet with orange rolled ends. */
 .scroll {
@@ -374,15 +494,28 @@
   margin-top: var(--s2);
 }
 
+/* Hints are gold sticky notes from Ray. */
 .hints .hint {
   font-size: 22px;
+  background: var(--gold);
+  color: var(--ink);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    0 var(--px) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    inset 0 var(--px) 0 var(--paper);
+}
+
+.hints .hint:nth-child(2) {
+  transform: rotate(-1deg);
 }
 
 .hint .pixel {
   display: block;
   margin-bottom: var(--s1);
   font-size: 10px;
-  color: var(--orange-hi);
+  color: var(--brick);
 }
 
 .gem__actions {
@@ -421,14 +554,14 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(var(--paper), var(--paper)) top left / 20px 4px,
-    linear-gradient(var(--paper), var(--paper)) top left / 4px 20px,
-    linear-gradient(var(--paper), var(--paper)) top right / 20px 4px,
-    linear-gradient(var(--paper), var(--paper)) top right / 4px 20px,
-    linear-gradient(var(--paper), var(--paper)) bottom left / 20px 4px,
-    linear-gradient(var(--paper), var(--paper)) bottom left / 4px 20px,
-    linear-gradient(var(--paper), var(--paper)) bottom right / 20px 4px,
-    linear-gradient(var(--paper), var(--paper)) bottom right / 4px 20px;
+    linear-gradient(var(--gold), var(--gold)) top left / 20px 4px,
+    linear-gradient(var(--gold), var(--gold)) top left / 4px 20px,
+    linear-gradient(var(--gold), var(--gold)) top right / 20px 4px,
+    linear-gradient(var(--gold), var(--gold)) top right / 4px 20px,
+    linear-gradient(var(--gold), var(--gold)) bottom left / 20px 4px,
+    linear-gradient(var(--gold), var(--gold)) bottom left / 4px 20px,
+    linear-gradient(var(--gold), var(--gold)) bottom right / 20px 4px,
+    linear-gradient(var(--gold), var(--gold)) bottom right / 4px 20px;
   background-repeat: no-repeat;
 }
 
@@ -525,6 +658,30 @@
   16%, 50%, 83%, 100% { opacity: 0; }
 }
 
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti i {
+  position: absolute;
+  top: -16px;
+  box-shadow: 0 0 0 2px var(--ink);
+  animation-name: fall;
+  animation-timing-function: steps(10, end);
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
+@keyframes fall {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(16px, 50vh); }
+  100% { transform: translate(-8px, 105vh); }
+}
+
 .get__stage {
   position: relative;
   display: flex;
@@ -562,6 +719,7 @@
 /* ---------- Polaroids + book ---------- */
 
 .polaroid {
+  position: relative;
   margin: 0;
   padding: var(--s2) var(--s2) var(--s3);
   background: var(--paper);
@@ -591,7 +749,7 @@
   margin: var(--s4) 0 var(--s1);
   font-size: var(--fs-pixel-l);
   font-weight: normal;
-  color: var(--orange);
+  color: var(--gold);
   text-shadow: var(--px) var(--px) 0 var(--ink);
 }
 
@@ -646,13 +804,60 @@
   line-height: 1.6;
 }
 
+/* A strip of colored tape holds each found photo on the page. */
+.polaroid:not(.polaroid--empty)::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 56px;
+  height: 16px;
+  margin-left: -28px;
+  background: var(--tape, var(--gold));
+  box-shadow: 0 0 0 2px var(--ink);
+  transform: rotate(-4deg);
+}
+
+.polaroid[data-tape="0"] { --tape: var(--gold); }
+.polaroid[data-tape="1"] { --tape: var(--cherry); }
+.polaroid[data-tape="2"] { --tape: var(--leaf); }
+.polaroid[data-tape="3"] { --tape: var(--plum); }
+.polaroid[data-tape="4"] { --tape: var(--gem); }
+
+/* The book is a cream scrapbook page; empty slots are dashed outlines. */
+.book {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.book .book__title {
+  color: var(--brick);
+  text-shadow: var(--px) var(--px) 0 var(--gold);
+}
+
+.book .book__sub {
+  color: var(--plum);
+}
+
 .polaroid--empty {
-  background: var(--blue);
-  color: var(--blue-hi);
+  background: transparent;
+  color: var(--stone);
+  box-shadow: none;
+  outline: var(--px) dashed var(--stone);
+  outline-offset: calc(var(--px) * -1);
+}
+
+.polaroid--empty .polaroid__frame {
+  background: transparent;
+}
+
+.polaroid--empty .polaroid__frame .pixel {
+  color: var(--stone);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .stars i.tw,
+  .confetti,
   .node--current .node__pad,
   .flash,
   .get__gem,
@@ -660,4 +865,12 @@
   .intro .walker.is-walking svg {
     animation: none;
   }
+}
+
+.email-slot:not(:empty) {
+  margin-top: var(--s6);
+}
+
+.book__actions {
+  margin-top: var(--s8);
 }

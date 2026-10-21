@@ -27,7 +27,7 @@ export function say(lines, opts = {}) {
   box.innerHTML = `
     <div class="dialogue__portrait"></div>
     <div class="dialogue__body">
-      <p class="dialogue__name">${opts.name || "RAY"}</p>
+      <p class="dialogue__name">${opts.name || "RAY BUCKNELL"}</p>
       <p class="dialogue__text"></p>
     </div>
     <span class="dialogue__more" aria-hidden="true">▼</span>

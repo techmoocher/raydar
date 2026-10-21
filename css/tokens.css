@@ -13,7 +13,8 @@
 }
 
 :root {
-  /* Palette */
+  /* Palette: 15 flat colors, NES-style. No gradients. */
+  /* Brand */
   --night: #001E3A;
   --blue: #003865;
   --blue-hi: #2F6DA3;
@@ -22,11 +23,20 @@
   --paper: #FFF4E0;
   --ink: #0B0F1A;
   --gem: #6FE3FF;
+  /* Campus accents */
+  --leaf: #5CB85C;     /* grass, confirm buttons, World 3 */
+  --leaf-dk: #2E6B34;  /* map ground */
+  --gold: #FFC93C;     /* stars, counts, hints, finale */
+  --cherry: #E0384B;   /* errors, wrong code, flowers */
+  --plum: #7B4FB8;     /* ghosts and scars, World 2 */
+  --brick: #B5502F;    /* old buildings, World 1 */
+  --stone: #9AA5B1;    /* locked nodes, path stones */
 
-  /* Ray's fur: sprite-only browns, never used for UI */
+  /* Ray's fur and horns: sprite-only, never used for UI */
   --fur-dk: #3B2414;
   --fur: #6B4426;
   --fur-hi: #9C6B3F;
+  --horn: #FFFFFF;
 
   /* Type */
   --font-pixel: "Press Start 2P", monospace;

@@ -120,9 +120,13 @@ input {
     inset 0 var(--px) 0 var(--gem);
 }
 
-.btn[disabled] {
-  opacity: 0.5;
+/* Disabled: flat stone grey, not a faded color. */
+.btn[disabled],
+.btn[disabled]:active {
+  background: var(--stone);
+  color: var(--ink);
   cursor: default;
+  transform: none;
 }
 
 /* Text field dressed as a pixel input. */
@@ -256,10 +260,10 @@ input {
   color: var(--blue-hi);
 }
 
-.hud__sound {
+/* ♪ button (HUD + title). Muted = struck through. */
+.sound-btn {
   min-width: var(--tap);
   min-height: var(--tap);
-  margin: calc(var(--s2) * -1) calc(var(--s3) * -1) calc(var(--s2) * -1) 0;
   border: 0;
   background: none;
   color: var(--orange-hi);
@@ -268,9 +272,131 @@ input {
   cursor: pointer;
 }
 
-.hud__sound[aria-pressed="false"] {
+.sound-btn.is-muted {
   color: var(--blue-hi);
   text-decoration: line-through;
+}
+
+.sound-btn[aria-expanded="true"] {
+  color: var(--ink);
+  background: var(--orange-hi);
+}
+
+.hud__sound {
+  margin: calc(var(--s2) * -1) calc(var(--s3) * -1) calc(var(--s2) * -1) 0;
+}
+
+/* Sound panel: drops down from the top-right corner. */
+.sound-panel {
+  position: fixed;
+  z-index: 30;
+  top: calc(56px + env(safe-area-inset-top));
+  right: max(var(--s2), calc((100vw - var(--max-w)) / 2 + var(--s2)));
+  width: min(300px, 100vw - var(--s4));
+  margin: 0;
+  display: grid;
+  gap: var(--s3);
+}
+
+.sound-panel[hidden] {
+  display: none;
+}
+
+.sound-panel p {
+  margin: 0;
+}
+
+.sound-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fs-pixel-s);
+  color: var(--orange);
+}
+
+.sound-panel__close {
+  min-width: var(--tap);
+  min-height: var(--tap);
+  margin: calc(var(--s3) * -1) calc(var(--s3) * -1) calc(var(--s3) * -1) 0;
+  border: 0;
+  background: none;
+  color: var(--paper);
+  font-size: var(--fs-pixel-s);
+  cursor: pointer;
+}
+
+.sound-panel__label {
+  font-size: 10px;
+  color: var(--orange-hi);
+}
+
+.sound-panel__track {
+  padding: var(--s2) var(--s3);
+  background: var(--ink);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-s);
+  color: var(--gem);
+}
+
+.sound-panel__track .note {
+  display: inline-block;
+}
+
+.sound-panel__transport {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: var(--s2);
+}
+
+.sound-panel__transport .btn {
+  margin: var(--px) var(--px) calc(var(--px) * 2);
+}
+
+.sound-panel__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  font-size: 10px;
+  color: var(--paper);
+}
+
+.btn--icon {
+  padding: var(--s2);
+}
+
+.btn .sprite {
+  pointer-events: none;
+}
+
+.btn--blue .sprite rect {
+  fill: var(--paper);
+}
+
+.vol {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+
+.vol__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 22px;
+}
+
+.vol__bar {
+  width: 6px;
+  background: var(--blue-hi);
+}
+
+.vol__bar.is-on {
+  background: var(--gem);
+}
+
+.sfx-toggle {
+  min-width: 72px;
 }
 
 /* Frame-based motion only. */
@@ -350,5 +476,99 @@ input {
 
   .wipe {
     display: none;
+  }
+}
+
+/* Email addresses are case-sensitive in spirit; don't shout them. */
+.px-input--email {
+  text-transform: none;
+  font-size: var(--fs-pixel-s);
+}
+
+.fineprint {
+  margin: var(--s3) var(--px) 0;
+  font-size: 20px;
+  color: var(--gem);
+}
+
+.form-row {
+  display: flex;
+  gap: var(--s3);
+  margin-top: var(--s3);
+}
+
+.form-row .btn {
+  flex: 1;
+}
+
+/* ---------- Accent colors ---------- */
+
+.btn--green {
+  background: var(--leaf);
+  color: var(--ink);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--leaf-dk),
+    0 calc(var(--px) * 2) 0 var(--ink),
+    inset 0 var(--px) 0 var(--paper);
+}
+
+.btn--gold {
+  background: var(--gold);
+  color: var(--ink);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--orange),
+    0 calc(var(--px) * 2) 0 var(--ink),
+    inset 0 var(--px) 0 var(--paper);
+}
+
+.btn--green:active,
+.btn--gold:active {
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--ink);
+}
+
+.dialogue__name {
+  color: var(--gold);
+}
+
+/* Wrong code: red frame and a 3-frame shake. */
+.px-input.is-wrong {
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--cherry),
+    0 var(--px) 0 var(--cherry),
+    calc(var(--px) * -1) 0 0 var(--cherry),
+    var(--px) 0 0 var(--cherry);
+  animation: shake calc(var(--frame) * 3) steps(3, end) 1;
+}
+
+@keyframes shake {
+  0% { transform: translateX(calc(var(--px) * -2)); }
+  33% { transform: translateX(calc(var(--px) * 2)); }
+  66% { transform: translateX(calc(var(--px) * -1)); }
+  100% { transform: translateX(0); }
+}
+
+/* HUD: the world label wears its act's color; the gem count is gold. */
+.hud__gems {
+  color: var(--gold);
+}
+
+.hud[data-act="1"] .hud__world { color: var(--orange-hi); }
+.hud[data-act="2"] .hud__world { color: var(--plum); }
+.hud[data-act="3"] .hud__world { color: var(--leaf); }
+.hud[data-act="4"] .hud__world { color: var(--gold); }
+
+@media (prefers-reduced-motion: reduce) {
+  .px-input.is-wrong {
+    animation: none;
   }
 }

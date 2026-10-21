@@ -19,6 +19,8 @@ const memoryBackend = {
 
 const blank = () => ({
   name: "",
+  email: "", // optional; only sent when the player taps EMAIL MY PAGE
+  emailAsked: false,
   found: {}, // id -> { at: ISO time, method: "qr" | "code" | "gps" | "photo" | "skip" }
   verified: {}, // id -> true when a QR deep link proved the card before the photo
   seenIntro: false,

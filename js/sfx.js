@@ -12,15 +12,23 @@ function readPref() {
   }
 }
 
-// Must run inside a user gesture (the PRESS START tap) to unlock audio.
+const unlockListeners = [];
+
+// Must run inside a user gesture (any tap) to unlock audio on phones.
 export function unlock() {
+  const first = !ctx;
   if (!ctx) {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     ctx = new AC();
   }
   if (ctx.state === "suspended") ctx.resume();
+  if (first) unlockListeners.forEach((fn) => fn(ctx));
 }
+
+// The shared AudioContext (null until the first tap). Music uses it too.
+export const audio = () => ctx;
+export const onUnlock = (fn) => unlockListeners.push(fn);
 
 export function isOn() {
   return on;
