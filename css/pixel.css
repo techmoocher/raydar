@@ -198,6 +198,24 @@ input {
   white-space: pre-wrap;
 }
 
+/* Every character is laid out up front, so wrapping never jumps mid-line. */
+.dialogue__text .ch { visibility: hidden; }
+.dialogue__text .ch.is-on { visibility: visible; }
+.dialogue__text .em { color: var(--orange-hi); }
+.dialogue__text .aside { color: var(--stone); }
+
+.dialogue__text .shake {
+  display: inline-block;
+  animation: tremble calc(var(--frame) * 2) steps(1, end) infinite;
+}
+
+@keyframes tremble {
+  0% { transform: translate(2px, 0); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-2px, 0); }
+}
+
 .dialogue__more {
   position: absolute;
   right: var(--s3);
@@ -455,7 +473,8 @@ input {
   .blink,
   .spin,
   .bob,
-  .dialogue.is-done .dialogue__more {
+  .dialogue.is-done .dialogue__more,
+  .dialogue__text .shake {
     animation: none;
   }
 

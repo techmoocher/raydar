@@ -1,5 +1,5 @@
 import { rayFull } from "../ui/sprites.js";
-import { say } from "../ui/dialogue.js";
+import { say, lit } from "../ui/dialogue.js";
 import { el } from "../ui/dom.js";
 import { starfield } from "../ui/scenery.js";
 import { offerEmail } from "../ui/email-form.js";
@@ -26,11 +26,12 @@ export function introScreen() {
     if (!screen.isConnected) return;
     screen.querySelector(".walker").classList.remove("is-walking");
     await say([
-      { text: "Oh! You picked up. Nobody answers unknown numbers anymore." },
-      { text: "I'm Ray. Ray Bucknell. Yes, like the school. That's a story for later." },
-      { text: "I've been on this hill longer than most of the bricks, and I've hidden twelve of my cards around campus." },
-      { text: "Each one marks a spot I don't want anyone to forget. Find them, snap a photo at each, and you get a page in my book." },
-      { text: "But first, who am I talking to?" },
+      { text: "Oh, you actually picked up!| Nobody answers unknown numbers anymore." },
+      { text: "I'm Ray.| Ray Bucknell.| ~And yes, like the school. Long story.~" },
+      { text: "I've been on this hill longer than most of the bricks, so I know a few of its secrets." },
+      { text: "I hid *twelve* cards around campus, each one at a spot I never want anyone to forget." },
+      { text: "Find them, snap a photo at each one,| and you'll earn a page in my book." },
+      { text: "So...| who am I talking to?" },
     ]);
     if (!screen.isConnected) return;
     askName(screen);
@@ -67,13 +68,13 @@ function askName(screen) {
     });
     sfx.select();
     slot.replaceChildren();
-    await say({ text: `${name}. Love it. Saving you in my contacts.`, mood: "proud" });
+    await say({ text: `${lit(name)}.| Love it.| ~Saving you in my contacts.~`, mood: "proud" });
     if (!screen.isConnected) return;
     if (emailOn() && !p().emailAsked) {
       await offerEmail(slot);
       if (!screen.isConnected) return;
     }
-    await say("Okay. The first gem is close. Like, really close. Let's check the map.");
+    await say("Okay.| The first gem is close.| ~Like, really close.~| Let's check the map.");
     if (!screen.isConnected) return;
     const scanned = Object.keys(p().verified)[0];
     setPendingDeepLink(null);

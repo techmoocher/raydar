@@ -73,8 +73,8 @@ export function gemScreen(id) {
     if (!p().tips?.gem) {
       await say([
         "Every gem starts with one of my riddles. Crack it, then go find the place.",
-        "Stuck? Tap HINT. Still stuck? Tap it again. No judgment.",
-        "Once you're standing there, hit I FOUND IT!",
+        "Stuck? Tap *HINT*.| Still stuck? Tap it again.| ~I won't tell anyone.~",
+        "Once you're standing right there, hit *I FOUND IT!*",
       ]);
       if (!screen.isConnected) return;
       await store.update((s) => {
@@ -86,8 +86,8 @@ export function gemScreen(id) {
       if (geo.choice() === null) {
         const yes = await say(
           [
-            "Quick thing. If you share your location, I'll show signal bars up top.",
-            "More bars, warmer you are. That's the only thing I use it for. Deal?",
+            "Quick question.| Mind if I peek at your location?",
+            "I'll show signal bars up top. The more bars, the warmer you are.| That's all I use it for, promise.",
           ],
           {
             choices: [

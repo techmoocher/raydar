@@ -43,7 +43,7 @@ export function titleScreen() {
   on("start", () => go("#/call"));
   on("continue", () => go("#/map"));
   on("new", async () => {
-    const ok = await say("Start over? This wipes your photos and progress.", {
+    const ok = await say("Start over?| That erases your photos and progress.", {
       choices: [
         { label: "ERASE", value: true },
         { label: "KEEP", value: false, primary: false },
@@ -71,7 +71,7 @@ export function titleScreen() {
   logo.addEventListener("contextmenu", (e) => e.preventDefault());
 
   if (pendingDeepLink() && !saved) {
-    later(screen, () => say("Ooh, you found one of my cards! Hit START and I'll fill you in."), 300);
+    later(screen, () => say("Ooh, you found one of my cards!| Hit *START* and I'll fill you in."), 300);
   }
   return screen;
 }

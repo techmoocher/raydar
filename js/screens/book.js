@@ -1,6 +1,6 @@
 // Ray's book: the player's photo page.
 
-import { say, close as closeDialogue } from "../ui/dialogue.js";
+import { say, lit, close as closeDialogue } from "../ui/dialogue.js";
 import { el, esc, pad2, reducedMotion } from "../ui/dom.js";
 import { hud } from "../ui/hud.js";
 import { emailForm } from "../ui/email-form.js";
@@ -83,7 +83,7 @@ export function bookScreen() {
 
   async function savePicture(blob) {
     const how = await savePage(blob || (await renderPage()));
-    if (how === "downloaded") say("Saved! Your page is in your downloads.");
+    if (how === "downloaded") say("Saved! Check your downloads.");
   }
 
   screen.querySelector("[data-act=save]").addEventListener("click", async () => {
@@ -101,7 +101,7 @@ export function bookScreen() {
     sfx.select();
     if (!emailOn()) {
       busy(true);
-      await say("Email isn't set up yet, so I'll save your page as a picture instead.");
+      await say("Email isn't hooked up yet,| so I'll save your page as a picture instead.");
       try {
         await savePicture();
       } finally {
@@ -112,7 +112,7 @@ export function bookScreen() {
 
     let to = p().email;
     if (to) {
-      const pick = await say(`Send your page to ${to}?`, {
+      const pick = await say(`Send your page to ${lit(to)}?`, {
         choices: [
           { label: "SEND", value: "send" },
           { label: "CHANGE", value: "change", primary: false },
@@ -130,24 +130,24 @@ export function bookScreen() {
     }
 
     busy(true);
-    say("Hitting send...");
+    say("Off it goes...");
     try {
       const blob = await renderPage();
       const result = await sendPage(blob);
       if (!screen.isConnected) return;
       if (result.ok) {
         sfx.itemGet();
-        say({ text: `Sent to ${to}! Not in your inbox? Check spam. Filters get weird about bison.`, mood: "proud" });
+        say({ text: `Sent to ${lit(to)}!| Not in your inbox? Check spam.| ~Filters get weird about bison.~`, mood: "proud" });
         return;
       }
       sfx.error();
       const why =
         result.error === "rate"
-          ? "I've already sent that address a few pages today. Give my hooves a rest and try later."
+          ? "I've already sent that address a few pages today.| Give my hooves a break and try again later."
           : result.error === "invalid"
-            ? "That address didn't go through. Double-check it?"
-            : "That didn't send. Campus Wi-Fi strikes again.";
-      const fallback = await say(`${why} Want your page as a picture instead?`, {
+            ? "That address didn't work.| Mind double-checking it?"
+            : "That didn't go through.| ~Campus Wi-Fi strikes again.~";
+      const fallback = await say(`${why}| Want it as a picture instead?`, {
         choices: [
           { label: "SAVE PAGE", value: true },
           { label: "NO THANKS", value: false, primary: false },

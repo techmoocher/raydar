@@ -37,7 +37,7 @@ export function emailForm(slot, { skipLabel = "SKIP" } = {}) {
       const email = input.value.trim();
       if (!validEmail(email)) {
         sfx.error();
-        say("Hmm, that doesn't look like an email. Something like you@bucknell.edu?");
+        say("Hmm.| That doesn't look like an email. Something like you@bucknell.edu?");
         input.focus();
         return;
       }
@@ -52,7 +52,7 @@ export function emailForm(slot, { skipLabel = "SKIP" } = {}) {
 }
 
 export async function offerEmail(slot) {
-  const yes = await say("Want your page sent to your inbox too? Photos, timestamps, all of it. Totally up to you.", {
+  const yes = await say("Want me to email you your page, too?| Photos, timestamps, the whole thing. No pressure.", {
     choices: [
       { label: "SURE", value: true },
       { label: "NOT NOW", value: false, primary: false },
@@ -67,9 +67,9 @@ export async function offerEmail(slot) {
     const email = await emailForm(slot);
     if (!slot.isConnected) return;
     if (email) {
-      await say("Done. Whenever you want it, tap EMAIL MY PAGE in my book.");
+      await say("Done.| Whenever you want it, tap *EMAIL MY PAGE* in my book.");
       return;
     }
   }
-  await say("All good. You can set it up from my book anytime.");
+  await say("All good.| If you change your mind, it's in my book.");
 }

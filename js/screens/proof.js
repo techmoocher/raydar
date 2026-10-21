@@ -1,5 +1,5 @@
 import { ray } from "../ui/sprites.js";
-import { say } from "../ui/dialogue.js";
+import { say, lit } from "../ui/dialogue.js";
 import { el, pad2 } from "../ui/dom.js";
 import { hud } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
@@ -60,13 +60,13 @@ export function proofScreen(id) {
     missing = true;
     if (g.geo) {
       await say([
-        { text: "Somebody walked off with my card? Rude.", mood: "spooky" },
-        "No worries. Snap a photo of the place itself and I'll check you're actually there.",
+        { text: "Somebody walked off with my card?|| ^Rude.^", mood: "spooky" },
+        "No worries.| Snap a photo of the place itself, and I'll check that you're really there.",
       ]);
     } else {
       await say([
-        { text: "Somebody walked off with my card? Rude.", mood: "spooky" },
-        `Here's my biggest hint: ${g.hints[g.hints.length - 1]}`,
+        { text: "Somebody walked off with my card?|| ^Rude.^", mood: "spooky" },
+        `Okay, here's my biggest hint:| ${lit(g.hints[g.hints.length - 1])}`,
         "If you're standing there, snap a photo and I'll take your word for it.",
       ]);
     }
@@ -108,13 +108,13 @@ export function proofScreen(id) {
       const other = byId(hit.id);
       say(
         isFound(other.id)
-          ? `Ha, that's my card for ${other.name}. You already got that one!`
-          : `Wait, that's my card for ${gemLabel(other)}. Wrong stop, but remember it. You'll be back. This gem's card is somewhere else.`
+          ? `Ha, that's my card for ${lit(other.name)}.| You already have that one!`
+          : `Wait...| that's my card for ${lit(gemLabel(other))}. Wrong stop!| Remember this place, though. You'll be back.`
       );
       return;
     }
     sfx.error();
-    await say("I can't read the code in that one. Just type the word printed under it.");
+    await say("Hmm, I can't make out the code in that one.| Just type the word printed under it.");
     if (screen.isConnected) showCodeForm();
   });
 
@@ -149,11 +149,11 @@ export function proofScreen(id) {
       field.classList.add("is-wrong");
       const owner = card.codeOwner(typed, GEMS);
       if (owner && owner.id !== g.id) {
-        say(`That's the word from my ${gemLabel(owner)} card. Wrong gem, right idea!`);
+        say(`That's the word from my ${lit(gemLabel(owner))} card.| Wrong gem, right idea!`);
       } else if (wrongCodes >= 3) {
-        say("Still not it. It's the one big word right under the square code. Spelling counts, spaces don't.");
+        say("Still not it.| It's the big word right under the square code. Spelling counts, spaces don't.");
       } else {
-        say("Hmm, not quite. Check the word under the code.");
+        say("Not quite.| Take another look at the word under the code.");
       }
     });
   }
@@ -164,10 +164,10 @@ export function proofScreen(id) {
         const pos = await geo.here();
         if (geo.distance(pos, g.geo) <= g.geo.r + Math.min(pos.acc || 0, 50)) return unlock("gps");
         sfx.error();
-        say("My map says you're not quite there. Get a little closer and try again.");
+        say("My map says you're not quite there yet.| Get a little closer and try again.");
       } catch {
         sfx.error();
-        say("I can't tell where you are. If you find the card, type the word under the code.");
+        say("I can't tell where you are.| If you find the card, just type the word under the code.");
         showCodeForm();
       }
       return;
@@ -189,10 +189,10 @@ export function proofScreen(id) {
     if (!screen.isConnected) return;
     say(
       verified()
-        ? "Card checks out! Now snap it in front of the gem. That's your photo for the book."
+        ? "Card checks out!| Now get a photo of it in front of the gem. That one's for the book."
         : [
-            "Hold my card up in front of the gem and snap a photo.",
-            "Get the place in the shot behind it. That photo goes on your page in my book.",
+            "Hold my card up with the gem behind it, and snap a photo.",
+            "That photo goes on your page in my book,| so make it a good one.",
           ]
     );
   }, 300);

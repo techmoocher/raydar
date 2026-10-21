@@ -53,7 +53,7 @@ function tone(freq, start, dur, vol = 0.06, type = "square") {
 
 export const sfx = {
   tick: () => tone(880, 0, 0.03, 0.04),
-  blip: () => tone(1320, 0, 0.02, 0.025),
+  blip: (freq = 1320) => tone(freq, 0, 0.02, 0.025),
   select: () => {
     tone(660, 0, 0.05);
     tone(990, 0.05, 0.07);

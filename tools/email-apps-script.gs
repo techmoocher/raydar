@@ -110,7 +110,7 @@ function buildEmail_(d, site) {
 
   var note = all
     ? "Here's your page in my book. All " + d.total + " gems, every last one. Every first-year walks in through the gates and every senior walks out, and now you're in my book for good."
-    : "Here's your page in my book. You've found " + found + " of my " + d.total + " gems so far. Every photo below is a spot I don't want you to forget. The rest are right where I left them.";
+    : "Here's your page in my book. You've found " + found + " of my " + d.total + " gems so far. Every photo below is a spot I don't want you to forget. The rest are still out there, right where I left them.";
 
   var safeSite = /^https:\/\//.test(site) ? site : "";
 

@@ -28,13 +28,13 @@ export const GEMS = [
     token: "k7q2",
     geo: null,
     memory: [
-      { text: "In 1849, this one building was the whole university.", mood: "wistful" },
-      { text: "It wasn't even Bucknell back then. Everyone called it the University at Lewisburg.", mood: "wistful" },
-      { text: "First building on the hill, and half of campus still needs Google Maps to find it.", mood: "happy" },
+      { text: "In 1849, this one building *was* the university.", mood: "wistful" },
+      { text: "Back then it wasn't even Bucknell.| Everyone called it the University at Lewisburg.", mood: "wistful" },
+      { text: "First building on the hill...| and half of campus still needs Google Maps to find it.", mood: "happy" },
     ],
     bonus: null,
     cardBack:
-      "You made it. In 1849, this was everything: classrooms, big dreams, a lot of mud. Nobody called it Bucknell yet. Give it 37 years.",
+      "You made it. In 1849, this was everything: classrooms, big dreams, a lot of mud. Nobody called it Bucknell yet.| ~Give it 37 years.~",
   },
 
   // Stubs: content not ported yet.
