@@ -8,9 +8,19 @@ export const p = () => store.get();
 export const foundCount = () => Object.keys(p().found).length;
 export const isFound = (id) => Boolean(p().found[id]);
 
-export const currentGem = () => GEMS.find((g) => !isFound(g.id)) || null;
+// The gem found most recently, in any order.
+export function lastFound() {
+  const found = p().found;
+  return GEMS.filter((g) => found[g.id]).sort((a, b) => (found[a.id].at < found[b.id].at ? -1 : 1)).pop() || null;
+}
 
-export const isOpen = (g) => isFound(g.id) || currentGem()?.id === g.id;
+// The trail is only Ray's suggestion: the next unfound gem after the last
+// one found, wrapping around. Players can go to any gem in any order.
+export function currentGem() {
+  const from = GEMS.indexOf(lastFound()) + 1;
+  const ahead = [...GEMS.slice(from), ...GEMS.slice(0, from)];
+  return ahead.find((g) => !isFound(g.id)) || null;
+}
 
 export const gemLabel = (g) => (isFound(g.id) ? g.name : `gem ${pad2(g.n)}`);
 

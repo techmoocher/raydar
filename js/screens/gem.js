@@ -4,13 +4,13 @@ import { hud, setBars } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
 import { GEMS, byId } from "../data/gems.js";
 import * as store from "../core/store.js";
-import { p, isOpen } from "../core/progress.js";
+import { p } from "../core/progress.js";
 import { go, later, onLeave, redirect } from "../core/router.js";
 import * as geo from "../hunt/geo.js";
 
 export function gemScreen(id) {
   const g = byId(id);
-  if (!g || !isOpen(g)) return redirect("#/map");
+  if (!g) return redirect("#/map");
 
   const screen = el(`
     <section class="screen gem" aria-label="Gem ${g.n} riddle">

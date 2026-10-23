@@ -56,7 +56,7 @@ export function getScreen(id) {
     await say(cardBackLines(g), { name: "CARD BACK" });
     if (!screen.isConnected) return;
     const where = await say(
-      next ? `Gem ${next.n}, unlocked.| Where to next?` : "That's all twelve.|| You actually did it.",
+      next ? `Gem ${next.n} is next on my trail.| Or go wherever you like.` : "That's all twelve.|| You actually did it.",
       {
         choices: [
           { label: "MAP", value: "#/map" },

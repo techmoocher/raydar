@@ -5,7 +5,7 @@ import { hud } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
 import { GEMS, byId } from "../data/gems.js";
 import * as store from "../core/store.js";
-import { p, isFound, isOpen, gemLabel } from "../core/progress.js";
+import { p, isFound, gemLabel } from "../core/progress.js";
 import { go, later, redirect } from "../core/router.js";
 import * as card from "../hunt/card.js";
 import * as geo from "../hunt/geo.js";
@@ -15,7 +15,6 @@ export function proofScreen(id) {
   const g = byId(id);
   if (!g || g.stub) return redirect("#/map");
   if (isFound(g.id)) return redirect(`#/get/${g.id}`);
-  if (!isOpen(g) && !p().verified[g.id]) return redirect("#/map");
 
   let missing = false;
   let photo = null; // { img, url }
@@ -103,16 +102,7 @@ export function proofScreen(id) {
 
     const hit = card.parseFound(text);
     if (hit && hit.id === g.id && card.tokenOk(hit.id, hit.token)) return unlock("qr");
-    if (hit && card.tokenOk(hit.id, hit.token)) {
-      sfx.error();
-      const other = byId(hit.id);
-      say(
-        isFound(other.id)
-          ? `Ha, that's my card for ${lit(other.name)}.| You already have that one!`
-          : `Wait...| that's my card for ${lit(gemLabel(other))}. Wrong stop!| Remember this place, though. You'll be back.`
-      );
-      return;
-    }
+    if (hit && card.tokenOk(hit.id, hit.token)) return otherCard(byId(hit.id));
     sfx.error();
     await say("Hmm, I can't make out the code in that one.| Just type the word printed under it.");
     if (screen.isConnected) showCodeForm();
@@ -149,13 +139,36 @@ export function proofScreen(id) {
       field.classList.add("is-wrong");
       const owner = card.codeOwner(typed, GEMS);
       if (owner && owner.id !== g.id) {
-        say(`That's the word from my ${lit(gemLabel(owner))} card.| Wrong gem, right idea!`);
+        otherCard(owner);
       } else if (wrongCodes >= 3) {
         say("Still not it.| It's the big word right under the square code. Spelling counts, spaces don't.");
       } else {
         say("Not quite.| Take another look at the word under the code.");
       }
     });
+  }
+
+  // Any order is fine, so a card from another gem can count for that gem.
+  async function otherCard(other) {
+    sfx.error();
+    if (isFound(other.id)) {
+      say(`Ha, that's my card for ${lit(other.name)}.| You already have that one!`);
+      return;
+    }
+    if (other.stub) {
+      say(`Wait...| that's my card for ${lit(gemLabel(other))}.| I'm still writing that riddle. Come back to it later?`);
+      return;
+    }
+    const yes = await say(
+      `Wait...| that's my card for ${lit(gemLabel(other))}, not this one.| Count it for that gem instead?`,
+      {
+        choices: [
+          { label: "COUNT IT", value: true },
+          { label: "NO, STAY", value: false, primary: false },
+        ],
+      }
+    );
+    if (yes && screen.isConnected) unlock("qr", other);
   }
 
   async function unlockMissing() {
@@ -175,14 +188,14 @@ export function proofScreen(id) {
     unlock("photo");
   }
 
-  async function unlock(method) {
+  async function unlock(method, gem = g) {
     const blob = await toKeepsake(photo.img);
-    await store.savePhoto(g.id, blob);
+    await store.savePhoto(gem.id, blob);
     await store.update((s) => {
-      s.found[g.id] = { at: new Date().toISOString(), method };
-      delete s.verified[g.id];
+      s.found[gem.id] = { at: new Date().toISOString(), method };
+      delete s.verified[gem.id];
     });
-    go(`#/get/${g.id}`);
+    go(`#/get/${gem.id}`);
   }
 
   later(screen, () => {

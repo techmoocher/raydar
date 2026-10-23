@@ -514,12 +514,12 @@
   text-shadow: 2px 2px 0 var(--ink);
 }
 
-.node--locked .node__pad {
+.node--open .node__pad {
   background: var(--stone);
   box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper);
 }
 
-.node--locked .node__label {
+.node--open .node__label {
   color: var(--stone);
 }
 

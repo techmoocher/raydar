@@ -1,4 +1,4 @@
-import { rayRun, gem as gemSprite, lock } from "../ui/sprites.js";
+import { rayRun, gem as gemSprite } from "../ui/sprites.js";
 import { say } from "../ui/dialogue.js";
 import { el, esc, pad2, reducedMotion } from "../ui/dom.js";
 import { meadow } from "../ui/scenery.js";
@@ -6,7 +6,7 @@ import { hud, saveNote } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
 import { GEMS, ACTS } from "../data/gems.js";
 import * as store from "../core/store.js";
-import { p, isFound, currentGem } from "../core/progress.js";
+import { p, isFound, currentGem, lastFound } from "../core/progress.js";
 import { go, later } from "../core/router.js";
 
 const ROW = 104;
@@ -57,13 +57,12 @@ export function mapScreen() {
     const { g } = it;
     const found = isFound(g.id);
     const current = cur?.id === g.id;
-    const state = found ? "found" : current ? "current" : "locked";
+    const state = found ? "found" : current ? "current" : "open";
     const label = found ? g.name : "???";
     const node = el(`
       <button class="node node--${state}" type="button" style="left:${it.x}%;top:${it.y}px"
-        aria-label="Gem ${g.n}${found ? `: ${esc(g.name)}, found` : current ? ", next riddle" : ", locked"}"
-        ${state === "locked" ? "disabled" : ""}>
-        <span class="node__pad">${found ? gemSprite(28) : current ? `<span class="node__n">${pad2(g.n)}</span>` : lock(24)}</span>
+        aria-label="Gem ${g.n}${found ? `: ${esc(g.name)}, found` : current ? ", Ray's pick for next" : ", riddle"}">
+        <span class="node__pad">${found ? gemSprite(28) : `<span class="node__n">${pad2(g.n)}</span>`}</span>
         <span class="node__label">${esc(label)}</span>
       </button>
     `);
@@ -76,7 +75,7 @@ export function mapScreen() {
 
   const nodes = items.filter((it) => it.type === "node");
   const target = nodes.find((it) => it.g.id === cur?.id) || nodes[nodes.length - 1];
-  const start = nodes[nodes.indexOf(target) - 1] || target;
+  const start = nodes.find((it) => it.g.id === lastFound()?.id) || target;
   const spot = (it) => ({ left: `calc(${it.x}% - 82px)`, top: `${it.y + 10}px` });
   const runner = el(`<div class="runner" aria-hidden="true">${rayRun(44)}</div>`);
   Object.assign(runner.style, spot(start));
@@ -127,8 +126,9 @@ export function mapScreen() {
       if (!screen.isConnected) return;
       await say([
         "This is my map.| Twelve gems, one trail across campus.",
-        "The orange spot is next.| Where is it, exactly?| ~That's the fun part.~",
-        "Tap *READ RAY'S RIDDLE* whenever you're ready.",
+        "The orange spot is my pick for next.| Where is it, exactly?| ~That's the fun part.~",
+        "The trail's just a suggestion, though.| Tap any gem, in any order.",
+        "Or tap *READ RAY'S RIDDLE* for mine.",
       ]);
       store.update((s) => {
         s.tips = { ...s.tips, map: true };
