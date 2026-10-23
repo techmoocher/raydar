@@ -90,7 +90,7 @@ export function proofScreen(id) {
     whereBtn.textContent = "CHECKING...";
     if (SKIP_GPS) return arrived("Location check skipped for testing (<code>?nogps</code>).");
     if (!g.geo) {
-      console.error(`Gem "${g.id}" has no geo, so nobody can check in there.`);
+      console.error(`Gem ${g.n} has no geo, so nobody can check in there.`);
       return blocked("This stop isn't on Ray's map yet.", "Huh.| This stop isn't on my map yet.| ~Tell whoever runs this hunt.~");
     }
     if (!geo.supported()) {

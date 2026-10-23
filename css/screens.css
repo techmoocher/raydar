@@ -921,7 +921,7 @@
   padding: var(--s2) var(--s3);
   border: 4px solid var(--cherry);
   color: var(--cherry);
-  background: rgb(255 255 255 / 0.85);
+  background: var(--paper);
   font-size: var(--fs-pixel-l);
   transform: translate(-50%, -50%) rotate(-12deg);
   animation: stamp 0.22s steps(3, end);

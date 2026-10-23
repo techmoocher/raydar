@@ -35,7 +35,7 @@ export const GEMS = [
       "This one's about when it all got started.",
       "Look for it carved in stone. Four characters, no letters.",
     ],
-    photo: "Get the Taylor Hall sign in the shot.",
+    photo: "Get the building's sign in the shot.",
     token: "k7q2",
     // From OpenStreetMap's footprint. Wide radius: players check in from indoors.
     geo: { lat: 40.95721, lng: -76.88295, r: 60 },
