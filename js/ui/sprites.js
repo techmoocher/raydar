@@ -73,17 +73,18 @@ const RAY_EYES = {
   wistful: ["...kDkkLFFFF", "...kDLkpLFFF"],
 };
 
+// The map runner is a bare bison: no jersey, unlike Ray's mascot look.
 const RUN_BODY = [
   "...............kw...",
   ".......kkkkk...kwk..",
   ".....kkLLLLLkk.kLLk.",
   "....kLLLLLLLLLkkLLLk",
   "...kFLLLLLLLLLLFFFFk",
-  "..kFFFkowwwwwokFkpFk",
-  ".kFFFFkowwwwwokFFFkk",
-  ".kFFFFkowwwwwokFFkkk",
-  "..kFFFkowwwwwokDDkkk",
-  "...kFFkoooooookDDDk.",
+  "..kFFFFFFFFFLLkFkpFk",
+  ".kFFFFFFFFFFLLkFFFkk",
+  ".kDFFFFFFFFFFLkFFkkk",
+  "..kDDFFFFFFFFFkDDkkk",
+  "...kDDDDDDDDDDkDDDk.",
 ];
 const RUN_FRAMES = [
   [
