@@ -140,14 +140,7 @@
   .qr { flex: 1; min-height: 0; display: flex; justify-content: center; padding: 0.02in 0; }
   .qr > svg { height: 100%; width: auto; max-width: 100%; aspect-ratio: 1; display: block; }
 
-  .word {
-    font: 22px/1 var(--pixel);
-    letter-spacing: 0.06em;
-    text-align: center;
-    white-space: nowrap;
-    margin: 0.02in 0 0.08in;
-  }
-  .how { font: 16px/1.05 var(--text); text-align: center; }
+  .how { font: 16px/1.05 var(--text); text-align: center; margin-top: 0.06in; }
   .how b { font-weight: normal; letter-spacing: 0.02em; }
   .leave {
     margin-top: 0.06in;
@@ -199,7 +192,8 @@
   <section class="panel" aria-label="Print settings">
     <h1>RAY'S CARDS</h1>
     <p>Black ink only. Every card is built from <code>js/data/gems.js</code>, so
-      reprint after changing a code, token or card back.</p>
+      reprint after changing a token or card back. The card is optional:
+      scanning it skips Ray's password, but players can finish a stop without it.</p>
 
     <h2>LAYOUT</h2>
     <div class="row">
@@ -218,7 +212,7 @@
 
     <h2>COPIES</h2>
     <table>
-      <thead><tr><th>#</th><th>Gem</th><th>Word</th><th>Card back</th><th>Copies</th></tr></thead>
+      <thead><tr><th>#</th><th>Gem</th><th>Password</th><th>Card back</th><th>Copies</th></tr></thead>
       <tbody id="copies"></tbody>
     </table>
     <p class="summary" id="summary"></p>
@@ -331,8 +325,7 @@
             <div class="num">GEM<b>${pad(gem.n)}/${pad(TOTAL)}</b></div>
           </div>
           <div class="qr">${svg}</div>
-          <div class="word fit-w">${esc(gem.code)}</div>
-          <div class="how">Snap me in Raydar, or type the word.<br><b>${esc(host(opts.base))}</b></div>
+          <div class="how">Snap me in Raydar to skip Ray's password.<br><b>${esc(host(opts.base))}</b></div>
           <div class="leave">Part of a campus scavenger hunt. Please leave me here!</div>
         </div>
       </div>`;
@@ -421,13 +414,8 @@
     $("#steps").innerHTML = [...common, ...extra].map((s) => `<li>${esc(s)}</li>`).join("");
   }
 
-  // Shrink text that doesn't fit: the code word by width, Ray's note by height.
+  // Shrink Ray's note until it fits the card back.
   function fit() {
-    for (const el of document.querySelectorAll(".fit-w")) {
-      let px = 22;
-      el.style.fontSize = `${px}px`;
-      while (el.scrollWidth > el.clientWidth && px > 12) el.style.fontSize = `${--px}px`;
-    }
     for (const el of document.querySelectorAll(".fit-h")) {
       let px = 24;
       el.style.fontSize = `${px}px`;
@@ -443,7 +431,7 @@
     const ok = Boolean(textOf(g.cardBack));
     const missing = [!g.token && "no token", !ok && "not written"].filter(Boolean).join(", ");
     return `<tr>
-      <td>${pad(g.n)}</td><td>${esc(g.name)}</td><td><code>${esc(g.code)}</code></td>
+      <td>${pad(g.n)}</td><td>${esc(g.name)}</td><td>${g.code ? `<code>${esc([].concat(g.code).join(" / "))}</code>` : "not set"}</td>
       <td class="${missing ? "warn" : ""}">${missing || "ready"}</td>
       <td><input type="number" id="copies-${g.id}" min="0" max="20" value="${g.n === 1 ? 2 : 1}" ${g.token ? "" : "disabled"} aria-label="Copies of gem ${g.n}"></td>
     </tr>`;

@@ -29,8 +29,9 @@ export function introScreen() {
       { text: "Oh, you actually picked up!| Nobody answers unknown numbers anymore." },
       { text: "I'm Ray.| Ray Bucknell.| ~And yes, like the school. Long story.~" },
       { text: "I've been on this hill longer than most of the bricks, so I know a few of its secrets." },
-      { text: "I hid *twelve* cards around campus, each one at a spot I never want anyone to forget." },
+      { text: "I picked *twelve* spots around campus that I never want anyone to forget." },
       { text: "Find them, snap a photo at each one,| and you'll earn a page in my book." },
+      { text: "I left a card at each one, too.| ~If nobody's walked off with it.~" },
       { text: "So...| who am I talking to?" },
     ]);
     if (!screen.isConnected) return;

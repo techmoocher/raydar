@@ -136,6 +136,33 @@
   z-index: 2;
 }
 
+.title__links {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: env(safe-area-inset-bottom);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: var(--s4);
+  font-size: var(--fs-pixel-s);
+}
+
+.title__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 var(--s2);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.title__links a:hover,
+.title__links a:focus-visible {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
 .ground {
   position: absolute;
   left: 0;
@@ -728,6 +755,34 @@
 
 /* ---------- Proof ---------- */
 
+.checkin {
+  margin-bottom: var(--s4);
+}
+
+.checkin__label {
+  margin-bottom: var(--s2);
+  font-size: var(--fs-pixel-s);
+  color: var(--orange-hi);
+}
+
+.checkin__msg {
+  margin-bottom: var(--s3);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.checkin.is-done .checkin__label {
+  color: var(--gem);
+}
+
+.checkin.is-done .checkin__label::before {
+  content: "✓ ";
+}
+
+.checkin.is-done .checkin__msg {
+  margin-bottom: 0;
+}
+
 .viewfinder {
   position: relative;
   display: grid;
@@ -807,6 +862,84 @@
   position: relative;
 }
 
+.camera:has(input:disabled) {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Ray's once-over: a little show over the photo, then a stamp. */
+.inspect {
+  position: absolute;
+  left: var(--s3);
+  right: var(--s3);
+  bottom: var(--s3);
+  z-index: 2;
+  padding: var(--s2) var(--s3);
+  background: var(--ink);
+  box-shadow: 0 0 0 var(--px) var(--blue-hi);
+}
+
+.inspect__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s2);
+  font-size: var(--fs-pixel-s);
+  color: var(--gold);
+}
+
+.inspect__ray .sprite {
+  width: 32px;
+  height: 32px;
+}
+
+.inspect__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1.9;
+}
+
+.inspect__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  color: var(--paper);
+}
+
+.inspect__list li span:last-child {
+  color: var(--gem);
+  text-align: right;
+}
+
+.inspect__stamp {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  z-index: 3;
+  padding: var(--s2) var(--s3);
+  border: 4px solid var(--cherry);
+  color: var(--cherry);
+  background: rgb(255 255 255 / 0.85);
+  font-size: var(--fs-pixel-l);
+  transform: translate(-50%, -50%) rotate(-12deg);
+  animation: stamp 0.22s steps(3, end);
+}
+
+@keyframes stamp {
+  from {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(2.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspect__stamp {
+    animation: none;
+  }
+}
+
 .code-form {
   margin-top: var(--s4);
 }
@@ -816,6 +949,21 @@
   margin-bottom: var(--s3);
   font-size: var(--fs-pixel-s);
   color: var(--orange-hi);
+}
+
+.code-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  margin-top: var(--s3);
+}
+
+.code-form__actions .btn--big {
+  flex: 1 1 60%;
+}
+
+.code-form__actions .btn--gold {
+  flex: 1 1 auto;
 }
 
 .proof__extra {
