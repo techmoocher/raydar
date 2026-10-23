@@ -7,6 +7,7 @@ import { sfx, unlock as unlockAudio } from "../audio/sfx.js";
 import * as store from "../core/store.js";
 import { pendingDeepLink } from "../core/progress.js";
 import { go, later } from "../core/router.js";
+import { DOCS_URL, REPO_URL } from "../config.js";
 
 export function titleScreen() {
   const saved = store.hasSave();
@@ -27,6 +28,10 @@ export function titleScreen() {
         }
       </div>
       ${ground()}
+      <nav class="title__links pixel" aria-label="About Raydar">
+        <a href="${DOCS_URL}" target="_blank" rel="noopener">DOCS</a>
+        <a href="${REPO_URL}" target="_blank" rel="noopener">SOURCE</a>
+      </nav>
       <div class="title__hall" aria-hidden="true">${hall(192)}</div>
       <div class="title__ray bob" aria-hidden="true">${rayFull(84)}</div>
     </section>

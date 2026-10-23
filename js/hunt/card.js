@@ -50,11 +50,15 @@ export function tokenOk(id, token) {
   return Boolean(gem?.token) && gem.token === String(token).toLowerCase();
 }
 
-const norm = (s) => String(s).toUpperCase().replace(/[^A-Z]/g, "");
+// Passwords are years on the building, so digits count; spaces and punctuation don't.
+const norm = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
 
-export const codeOk = (gem, typed) => norm(typed) === norm(gem.code);
+// A stop can accept more than one password when several years are on show.
+const answers = (gem) => [].concat(gem.code || []).map(norm).filter(Boolean);
 
-export const codeOwner = (typed, gems) => gems.find((g) => norm(g.code) === norm(typed));
+export const codeOk = (gem, typed) => Boolean(norm(typed)) && answers(gem).includes(norm(typed));
+
+export const codeOwner = (typed, gems) => gems.find((g) => codeOk(g, typed));
 
 export function cardUrl(gem, base = location.origin + location.pathname) {
   return `${base}#/found/${gem.id}/${gem.token}`;

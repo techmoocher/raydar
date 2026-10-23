@@ -136,6 +136,33 @@
   z-index: 2;
 }
 
+.title__links {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: env(safe-area-inset-bottom);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: var(--s4);
+  font-size: var(--fs-pixel-s);
+}
+
+.title__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 var(--s2);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.title__links a:hover,
+.title__links a:focus-visible {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
 .ground {
   position: absolute;
   left: 0;
@@ -695,6 +722,22 @@
   color: var(--brick);
 }
 
+.hint--bonus {
+  font-size: 22px;
+  background: var(--gem);
+  color: var(--ink);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    0 var(--px) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    inset 0 var(--px) 0 var(--paper);
+}
+
+.hint--bonus .pixel {
+  color: var(--blue);
+}
+
 .gem__actions {
   display: flex;
   flex-wrap: wrap;
@@ -711,6 +754,34 @@
 }
 
 /* ---------- Proof ---------- */
+
+.checkin {
+  margin-bottom: var(--s4);
+}
+
+.checkin__label {
+  margin-bottom: var(--s2);
+  font-size: var(--fs-pixel-s);
+  color: var(--orange-hi);
+}
+
+.checkin__msg {
+  margin-bottom: var(--s3);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.checkin.is-done .checkin__label {
+  color: var(--gem);
+}
+
+.checkin.is-done .checkin__label::before {
+  content: "✓ ";
+}
+
+.checkin.is-done .checkin__msg {
+  margin-bottom: 0;
+}
 
 .viewfinder {
   position: relative;
@@ -791,6 +862,84 @@
   position: relative;
 }
 
+.camera:has(input:disabled) {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Ray's once-over: a little show over the photo, then a stamp. */
+.inspect {
+  position: absolute;
+  left: var(--s3);
+  right: var(--s3);
+  bottom: var(--s3);
+  z-index: 2;
+  padding: var(--s2) var(--s3);
+  background: var(--ink);
+  box-shadow: 0 0 0 var(--px) var(--blue-hi);
+}
+
+.inspect__title {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s2);
+  font-size: var(--fs-pixel-s);
+  color: var(--gold);
+}
+
+.inspect__ray .sprite {
+  width: 32px;
+  height: 32px;
+}
+
+.inspect__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 10px;
+  line-height: 1.9;
+}
+
+.inspect__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+  color: var(--paper);
+}
+
+.inspect__list li span:last-child {
+  color: var(--gem);
+  text-align: right;
+}
+
+.inspect__stamp {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  z-index: 3;
+  padding: var(--s2) var(--s3);
+  border: 4px solid var(--cherry);
+  color: var(--cherry);
+  background: var(--paper);
+  font-size: var(--fs-pixel-l);
+  transform: translate(-50%, -50%) rotate(-12deg);
+  animation: stamp 0.22s steps(3, end);
+}
+
+@keyframes stamp {
+  from {
+    transform: translate(-50%, -50%) rotate(-12deg) scale(2.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inspect__stamp {
+    animation: none;
+  }
+}
+
 .code-form {
   margin-top: var(--s4);
 }
@@ -800,6 +949,21 @@
   margin-bottom: var(--s3);
   font-size: var(--fs-pixel-s);
   color: var(--orange-hi);
+}
+
+.code-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s3);
+  margin-top: var(--s3);
+}
+
+.code-form__actions .btn--big {
+  flex: 1 1 60%;
+}
+
+.code-form__actions .btn--gold {
+  flex: 1 1 auto;
 }
 
 .proof__extra {
@@ -1079,4 +1243,490 @@
 /* Clears the fixed dock so the last row of photos stays visible. */
 .book .screen__body {
   padding-bottom: calc(200px + env(safe-area-inset-bottom));
+}
+
+/* ---------- Bonus games ---------- */
+
+.bonus__title {
+  margin: 0 var(--px) var(--s2);
+  font-size: var(--fs-pixel-m);
+  color: var(--orange-hi);
+}
+
+.bonus__how {
+  margin: 0 var(--px) var(--s4);
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.bonus__status {
+  min-height: 1.5em;
+  margin: var(--s3) var(--px);
+  font-size: 10px;
+  color: var(--gem);
+  text-align: center;
+}
+
+.bonus__actions {
+  display: flex;
+  gap: var(--s3);
+}
+
+.bonus__actions .btn {
+  flex: 1;
+}
+
+.mg {
+  display: grid;
+  justify-items: center;
+}
+
+.mg.is-over {
+  pointer-events: none;
+}
+
+.mg-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--s2);
+  width: 100%;
+  max-width: 320px;
+  padding: var(--s2);
+  background: var(--ink);
+  box-shadow: 0 0 0 var(--px) var(--blue-hi);
+}
+
+.mg-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--blue);
+  color: var(--paper);
+  font-family: var(--font-pixel);
+  font-size: var(--fs-pixel-s);
+  cursor: pointer;
+  box-shadow: inset 0 var(--px) 0 var(--blue-hi);
+  touch-action: manipulation;
+}
+
+.mg-cell[disabled] {
+  cursor: default;
+}
+
+/* Hunt Hall: windows with crossbars */
+.mg-lights {
+  max-width: 280px;
+  background: var(--brick);
+  box-shadow: 0 0 0 var(--px) var(--ink);
+}
+
+.mg-window {
+  background: var(--night);
+  box-shadow: inset 0 0 0 var(--px) var(--ink);
+}
+
+.mg-window.is-lit {
+  background: var(--gold);
+}
+
+.mg-window::before,
+.mg-window::after {
+  content: "";
+  position: absolute;
+  background: var(--ink);
+}
+
+.mg-window::before {
+  inset: 0 calc(50% - 2px);
+}
+
+.mg-window::after {
+  inset: calc(50% - 2px) 0;
+}
+
+/* Bucknell Hall: the tank */
+.mg-tank {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.mg-tank__gauge {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: var(--px);
+  padding: var(--px);
+  background: var(--ink);
+  box-shadow: 0 0 0 var(--px) var(--stone);
+}
+
+.mg-tank__gauge span {
+  height: 32px;
+  background: var(--night);
+}
+
+.mg-tank__gauge span.is-on {
+  background: var(--leaf);
+}
+
+.mg-tank__total {
+  margin: var(--s4) 0 var(--s1);
+  font-size: var(--fs-pixel-m);
+  color: var(--gold);
+}
+
+.mg-tank__log {
+  min-height: 1.2em;
+  margin: 0 0 var(--s3);
+  font-size: 22px;
+}
+
+.mg-tank__cans {
+  display: flex;
+  gap: var(--s2);
+}
+
+.mg-tank__cans .btn {
+  flex: 1;
+  padding-inline: var(--s2);
+}
+
+/* Old Art Building: pipes */
+.mg-pipes {
+  grid-template-columns: 12px repeat(4, minmax(0, 1fr)) 12px;
+}
+
+.mg-pipe {
+  background: var(--night);
+  box-shadow: none;
+}
+
+.mg-pipe svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--stone);
+}
+
+.mg-pipe.is-wet svg {
+  fill: var(--gem);
+}
+
+.mg-pipes__end {
+  align-self: center;
+  height: 34%;
+}
+
+.mg-pipes__end.is-water {
+  background: var(--gem);
+}
+
+.mg-pipes__end.is-drain {
+  background: var(--blue-hi);
+}
+
+/* Roberts Hall: record boxes */
+.mg-records {
+  max-width: 264px;
+}
+
+.mg-box {
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--fs-pixel-l);
+  box-shadow: inset 0 calc(var(--px) * -1) 0 var(--brick);
+}
+
+.mg-box.is-home {
+  background: var(--orange-hi);
+}
+
+.mg-box.is-gap {
+  background: var(--night);
+  box-shadow: none;
+  cursor: default;
+}
+
+/* Carnegie Building: book piles */
+.mg-books {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s2);
+  width: 100%;
+  max-width: 320px;
+}
+
+.mg-pile {
+  display: flex;
+  flex-direction: column;
+  min-height: 176px;
+  padding: var(--s2) var(--s1) var(--s1);
+  border: 0;
+  border-radius: 0;
+  background: var(--blue);
+  color: var(--paper);
+  cursor: pointer;
+  box-shadow:
+    0 0 0 var(--px) var(--ink),
+    inset 0 calc(var(--px) * -2) 0 var(--brick);
+}
+
+.mg-pile.is-held {
+  background: var(--blue-hi);
+}
+
+.mg-pile__stack {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 2px;
+}
+
+.mg-book {
+  display: block;
+  height: 20px;
+  box-shadow: inset 0 calc(var(--px) * -1) 0 var(--ink);
+}
+
+.mg-book--1 { background: var(--cherry); }
+.mg-book--2 { background: var(--leaf); }
+.mg-book--3 { background: var(--gold); }
+.mg-book--4 { background: var(--plum); }
+
+.mg-book.is-up {
+  transform: translateY(-12px);
+}
+
+.mg-pile__name {
+  margin-top: var(--s2);
+  font-size: 10px;
+  text-align: center;
+}
+
+/* The Cells: the lock */
+.mg-lock {
+  display: grid;
+  justify-items: center;
+  gap: var(--s3);
+  width: 100%;
+  max-width: 320px;
+}
+
+.mg-lock__wheels {
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  gap: var(--s3);
+}
+
+.mg-wheel {
+  background: var(--ink);
+  color: var(--gold);
+  font-size: var(--fs-pixel-l);
+  box-shadow: inset 0 0 0 var(--px) var(--stone);
+}
+
+.mg-lock__try {
+  width: 216px;
+}
+
+.mg-lock__log {
+  display: grid;
+  gap: var(--s1);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mg-lock__log li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s1) var(--s3);
+  background: var(--blue);
+}
+
+.mg-lock__pegs {
+  display: flex;
+  gap: var(--s1);
+}
+
+.mg-lock__pegs i {
+  width: 16px;
+  height: 16px;
+  background: var(--night);
+  box-shadow: inset 0 0 0 2px var(--blue-hi);
+}
+
+.mg-lock__pegs i.is-right {
+  background: var(--orange);
+  box-shadow: none;
+}
+
+.mg-lock__pegs i.is-close {
+  background: var(--paper);
+  box-shadow: none;
+}
+
+/* The Flyson: order cards */
+.mg-card {
+  aspect-ratio: 3 / 4;
+  background: var(--orange);
+  color: var(--ink);
+  font-size: 9px;
+  box-shadow: inset 0 var(--px) 0 var(--orange-hi);
+}
+
+.mg-card.is-up {
+  background: var(--paper);
+}
+
+.mg-card.is-done {
+  background: var(--leaf);
+}
+
+/* Malesardi Quad: flames */
+.mg-flame {
+  max-width: 272px;
+}
+
+.mg-spot {
+  background: var(--night);
+  box-shadow: none;
+}
+
+.mg-spot.is-lit {
+  background: var(--blue);
+}
+
+.mg-spot.is-head {
+  box-shadow: inset 0 0 0 var(--px) var(--gold);
+}
+
+.mg-spot.is-block {
+  background: var(--stone);
+}
+
+/* Bucky: the yard and the d-pad */
+.mg-herd {
+  display: grid;
+  justify-items: center;
+  gap: var(--s4);
+  width: 100%;
+}
+
+.mg-yard {
+  background: var(--leaf-dk);
+}
+
+.mg-ground {
+  background: var(--leaf);
+  box-shadow: none;
+}
+
+.mg-ground.is-wall {
+  background: var(--brick);
+  box-shadow: inset 0 calc(var(--px) * -1) 0 var(--ink);
+  cursor: default;
+}
+
+.mg-ground.is-pen {
+  background: var(--gold);
+}
+
+.mg-dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-areas: ". up ." "left down right";
+  gap: var(--s1);
+}
+
+.mg-dpad .btn {
+  min-width: 56px;
+  margin: 0;
+  padding: 0;
+}
+
+.mg-dpad__up { grid-area: up; }
+.mg-dpad__down { grid-area: down; }
+.mg-dpad__left { grid-area: left; }
+.mg-dpad__right { grid-area: right; }
+
+.mg-turn--up,
+.mg-turn--down,
+.mg-turn--left,
+.mg-turn--right {
+  display: inline-grid;
+}
+
+.mg-turn--up { transform: rotate(-90deg); }
+.mg-turn--down { transform: rotate(90deg); }
+.mg-turn--left { transform: rotate(180deg); }
+
+/* Rooke Chapel: organ pipes */
+.mg-organ {
+  display: grid;
+  justify-items: center;
+  gap: var(--s4);
+  width: 100%;
+  max-width: 320px;
+}
+
+.mg-organ__pipes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: var(--s2);
+  width: 100%;
+  height: 200px;
+  padding: var(--s2);
+  background: var(--ink);
+  box-shadow: 0 0 0 var(--px) var(--blue-hi);
+}
+
+.mg-pipe-key {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  box-shadow: inset 0 var(--px) 0 var(--paper), inset 0 calc(var(--px) * -1) 0 var(--ink);
+  touch-action: manipulation;
+}
+
+.mg-pipe-key--0 { height: 100%; background: var(--plum); }
+.mg-pipe-key--1 { height: 82%; background: var(--gem); }
+.mg-pipe-key--2 { height: 66%; background: var(--gold); }
+.mg-pipe-key--3 { height: 50%; background: var(--cherry); }
+
+.mg-pipe-key.is-on {
+  background: var(--paper);
+}
+
+.mg-organ__listen {
+  width: 200px;
+}
+
+/* Mathewson Gates: strike zone */
+.mg-zone {
+  background: var(--paper);
+  box-shadow: 0 0 0 var(--px) var(--ink);
+}
+
+.mg-plate.is-thrown {
+  background: var(--night);
+  box-shadow: none;
+}
+
+.mg-plate.is-mitt {
+  background: var(--gold);
+}
+
+.mg-turn {
+  display: inline-grid;
+  transform: rotate(calc(var(--turns) * 90deg));
 }

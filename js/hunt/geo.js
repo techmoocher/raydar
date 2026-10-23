@@ -40,6 +40,18 @@ export function setChoice(v) {
 
 export const supported = () => "geolocation" in navigator;
 
+// "granted", "denied" or "prompt"; null when the browser won't say.
+export async function permission() {
+  try {
+    return (await navigator.permissions.query({ name: "geolocation" })).state;
+  } catch {
+    return null;
+  }
+}
+
+// Inside the stop's radius, allowing for some GPS error (capped so it can't cover campus).
+export const isHere = (pos, geo) => distance(pos, geo) <= geo.r + Math.min(pos.acc || 0, 50);
+
 // Returns a stop function.
 export function watch(geo, onUpdate, onError) {
   if (!geo || !supported()) return () => {};

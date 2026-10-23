@@ -528,8 +528,21 @@ input {
     inset 0 var(--px) 0 var(--paper);
 }
 
+.btn--gem {
+  background: var(--gem);
+  color: var(--ink);
+  box-shadow:
+    0 calc(var(--px) * -1) 0 var(--ink),
+    calc(var(--px) * -1) 0 0 var(--ink),
+    var(--px) 0 0 var(--ink),
+    0 var(--px) 0 var(--blue-hi),
+    0 calc(var(--px) * 2) 0 var(--ink),
+    inset 0 var(--px) 0 var(--paper);
+}
+
 .btn--green:active,
-.btn--gold:active {
+.btn--gold:active,
+.btn--gem:active {
   box-shadow:
     0 calc(var(--px) * -1) 0 var(--ink),
     calc(var(--px) * -1) 0 0 var(--ink),

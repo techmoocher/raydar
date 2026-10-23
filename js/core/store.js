@@ -23,6 +23,7 @@ const blank = () => ({
   found: {}, // id -> { at, method }
   verified: {}, // id -> true after a card deep link
   hints: {}, // id -> how many hints the player has revealed
+  bonus: {}, // id -> true once the bonus hint is unlocked
   seenIntro: false,
 });
 
