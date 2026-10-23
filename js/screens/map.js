@@ -2,7 +2,7 @@ import { rayRun, gem as gemSprite } from "../ui/sprites.js";
 import { say } from "../ui/dialogue.js";
 import { el, esc, pad2, reducedMotion } from "../ui/dom.js";
 import { meadow } from "../ui/scenery.js";
-import { hud, saveNote, locationNote } from "../ui/hud.js";
+import { hud, saveNote } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
 import { GEMS, ACTS } from "../data/gems.js";
 import * as store from "../core/store.js";
@@ -52,7 +52,7 @@ export function mapScreen() {
     const state = found ? "found" : current ? "current" : "open";
     const label = found ? g.name : "???";
     const node = el(`
-      <button class="node node--${state}" type="button" style="left:${it.x}%;top:${it.y}px"
+      <button class="node node--${state}" type="button" data-act="${g.act}" style="left:${it.x}%;top:${it.y}px"
         aria-label="Gem ${g.n}${found ? `: ${esc(g.name)}, found` : current ? ", Ray's pick for next" : ", riddle"}">
         <span class="node__pad">${found ? gemSprite(28) : `<span class="node__n">${pad2(g.n)}</span>`}</span>
         <span class="node__label">${esc(label)}</span>
@@ -92,7 +92,6 @@ export function mapScreen() {
   const body = el(`<div class="map__body"></div>`);
   body.appendChild(world);
   body.insertAdjacentHTML("beforeend", saveNote());
-  locationNote(body);
   screen.appendChild(body);
 
   const dock = el(`

@@ -4,6 +4,10 @@ import { close as closeDialogue } from "../ui/dialogue.js";
 import { close as closeSoundPanel } from "../ui/sound-panel.js";
 import * as music from "../audio/music.js";
 import { reducedMotion } from "../ui/dom.js";
+import { guardLocation } from "../ui/location-gate.js";
+
+// The hunt can't be played without location, so these screens sit behind a gate.
+const NEEDS_LOCATION = new Set(["map", "gem", "bonus", "proof"]);
 
 const app = document.getElementById("app");
 
@@ -93,6 +97,7 @@ async function render() {
   const track = key in SCREEN_MUSIC ? SCREEN_MUSIC[key] : "overworld";
   if (track) music.play(track);
   else music.silence();
+  guardLocation(NEEDS_LOCATION.has(key));
   screen._enter?.forEach((fn) => fn());
 }
 

@@ -35,22 +35,6 @@ export const LOCATION_HELP = `
   <b>iPhone:</b> Settings → Privacy &amp; Security → Location Services → Safari Websites → While Using the App.<br>
   <b>Android:</b> tap the icon left of the address bar → Permissions → Location → Allow.`;
 
-// Adds a warning to `target` once we know location is blocked or missing.
-export async function locationNote(target) {
-  const state = geo.supported() ? await geo.permission() : "unsupported";
-  if (state === "denied") {
-    target.insertAdjacentHTML(
-      "afterbegin",
-      `<p class="note">Location is off, and you need it to check in at each stop.<br>${LOCATION_HELP}</p>`
-    );
-  } else if (state === "unsupported") {
-    target.insertAdjacentHTML(
-      "afterbegin",
-      `<p class="note">This browser can't share your location, so you can't check in at stops. Try Safari or Chrome.</p>`
-    );
-  }
-}
-
 export function saveNote() {
   return store.persistent
     ? ""

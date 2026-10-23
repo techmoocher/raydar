@@ -26,6 +26,62 @@
   color: var(--orange-hi);
 }
 
+/* ---------- Location gate ---------- */
+
+/* Covers the hunt screens (and Ray's dialogue) until location is on. */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--s4) + env(safe-area-inset-top)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  background: var(--night);
+}
+
+.gate__box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s3);
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.gate__ray .sprite {
+  width: 64px;
+  height: 64px;
+}
+
+.gate__title {
+  margin: 0;
+  font-size: var(--fs-pixel-m);
+  font-weight: normal;
+  color: var(--orange-hi);
+}
+
+.gate__text,
+.gate__help,
+.gate__note {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.gate__help {
+  text-align: left;
+}
+
+.gate__note {
+  color: var(--gold);
+}
+
+.gate__box .btn {
+  width: 100%;
+}
+
 /* ---------- Title ---------- */
 
 .title {
@@ -501,35 +557,44 @@
   cursor: default;
 }
 
+/* Each node wears its arc's banner colors. */
+.node[data-act="1"] { --arc: var(--blue); --arc-hi: var(--blue-hi); --arc-ink: var(--paper); }
+.node[data-act="2"] { --arc: var(--plum); --arc-hi: var(--stone); --arc-ink: var(--paper); }
+.node[data-act="3"] { --arc: var(--gold); --arc-hi: var(--paper); --arc-ink: var(--ink); }
+.node[data-act="4"] { --arc: var(--orange); --arc-hi: var(--orange-hi); --arc-ink: var(--ink); }
+
 .node__pad {
   display: grid;
   place-items: center;
   width: 56px;
   height: 56px;
-  background: var(--night);
-  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 0 0 var(--px) var(--blue-hi);
+  background: var(--arc);
+  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--arc-hi);
 }
 
 .node--found .node__pad {
   box-shadow: 0 0 0 var(--px) var(--ink), inset 0 0 0 var(--px) var(--gem);
 }
 
+/* Ray's pick: a white ring that blinks (and stays put with reduced motion). */
 .node--current .node__pad {
-  background: var(--orange);
-  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--orange-hi);
+  box-shadow:
+    0 0 0 var(--px) var(--ink),
+    0 0 0 calc(var(--px) * 2) var(--paper),
+    inset 0 var(--px) 0 var(--arc-hi);
   animation: node-blink 1s steps(1, end) infinite;
 }
 
 @keyframes node-blink {
   50% {
-    background: var(--orange-hi);
+    box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--arc-hi);
   }
 }
 
 .node__n {
   font-family: var(--font-pixel);
   font-size: var(--fs-pixel-m);
-  color: var(--ink);
+  color: var(--arc-ink);
 }
 
 .node__label {
@@ -539,16 +604,6 @@
   text-transform: uppercase;
   color: var(--paper);
   text-shadow: 2px 2px 0 var(--ink);
-}
-
-/* Open, not locked: blue like a button, so it reads as tappable. */
-.node--open .node__pad {
-  background: var(--blue);
-  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--blue-hi);
-}
-
-.node--open .node__n {
-  color: var(--paper);
 }
 
 .runner {
