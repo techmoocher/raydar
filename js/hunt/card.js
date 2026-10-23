@@ -39,6 +39,44 @@ export async function scan(img) {
   return null;
 }
 
+export const liveSupported = () => Boolean(navigator.mediaDevices?.getUserMedia);
+
+// Live camera scan into `video`. Calls onText with each QR it reads; returns a stop function.
+export async function startLive(video, onText) {
+  const jsQR = await loadJsQR();
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: "environment" },
+    audio: false,
+  });
+  video.muted = true;
+  video.setAttribute("playsinline", "");
+  video.srcObject = stream;
+  await video.play().catch(() => {});
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  let live = true;
+  const tick = () => {
+    if (!live) return;
+    const { videoWidth: w, videoHeight: h } = video;
+    if (w && h) {
+      const scale = Math.min(1, 720 / Math.max(w, h));
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const hit = jsQR(data, canvas.width, canvas.height, { inversionAttempts: "attemptBoth" });
+      if (hit?.data) onText(hit.data);
+    }
+    setTimeout(tick, 200);
+  };
+  tick();
+  return () => {
+    live = false;
+    stream.getTracks().forEach((t) => t.stop());
+    video.srcObject = null;
+  };
+}
+
 // Cards encode https://<site>/#/found/<id>/<token>.
 export function parseFound(text) {
   const m = /#\/found\/([a-z]+)\/([a-z0-9]+)/i.exec(text || "");

@@ -9,22 +9,21 @@ Built for the Bucknell App Makerspace **Hidden Gems: The Best of Bucknell**
 contest in October 2026. Open it on your phone; there's nothing to install
 and no account to create.
 
-**Current state:** all twelve stops are playable. Ten have Ray's password,
+**Current state:** all twelve stops are playable. Ten have Ray's number,
 taken from campus histories and still to be checked on site; the food truck
-and the quad finish with the check-in and the photo.
+and the quad need only the check-in.
 
 ## How a stop works
 
 1. **Check in.** The phone's location has to put you at the stop, so keep
    location on for the whole hunt. With it off, the hunt waits behind a
    screen that shows how to turn it on.
-2. **Photo.** Snap the sign with the building's name. It goes on your page
-   in Ray's book. Ray looks it over and stamps it **APPROVED**, but that's
-   just for fun: the photo itself isn't checked.
-3. **Password.** Type Ray's password, something written at the stop. If
-   Ray's card is still there, a photo of its QR code skips this step.
+2. **Ray's card or the number.** Scan Ray's card with the live camera. If
+   the card is gone, type Ray's number instead, a year shown at the stop.
+3. **Photo for the book.** Take a picture with the building. It's a
+   keepsake, not a check; Ray stamps it **FOR THE BOOK** just for fun.
 
-Cards are a bonus, so a missing card never blocks anyone. The
+A missing card never blocks anyone, because the number always works. The
 [walkthrough](https://techmoocher.github.io/raydar.docs/#play) covers the
 whole game.
 
