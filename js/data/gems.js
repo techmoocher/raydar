@@ -67,7 +67,11 @@ export const GEMS = [
     hints: [
       "On Loomis Street, home of the Stadler Center for Poetry & Literary Arts.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1886"], // Dedicated 1886. Unconfirmed on site.
+    clues: [
+      "This one's about when the doors first opened.",
+      "Look on the stonework out front. Four characters, no letters.",
+    ],
     photo: "Get the building's sign in the shot.",
     geo: { lat: 40.95876, lng: -76.88251, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "tank",
@@ -92,7 +96,11 @@ export const GEMS = [
     hints: [
       "A residence hall just west of Bucknell Hall. Look for the porch and steps.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1928", "1927"], // Opened 1928, dug 1927. Unconfirmed on site.
+    clues: [
+      "When did the first residents move in?",
+      "Look on the building's stonework. Four characters, no letters.",
+    ],
     photo: "Get the porch and steps in the shot.",
     geo: { lat: 40.9589, lng: -76.88349, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "lights",
@@ -117,7 +125,11 @@ export const GEMS = [
     hints: [
       "The old Art Building on Walker Street, where it bridges Miller Run.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1889", "1920"], // Built 1889, extended over the creek 1920. Unconfirmed on site.
+    clues: [
+      "When did this place go up, long before the creek got involved?",
+      "Look on the building itself. Four characters, no letters.",
+    ],
     photo: "Get the creek and the building over it in the shot.",
     geo: { lat: 40.95811, lng: -76.88379, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "pipes",
@@ -142,7 +154,11 @@ export const GEMS = [
     hints: [
       "The oldest residence hall on campus, on the north side of the old quad, renamed for trustee Daniel C. Roberts.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1858", "1937", "1932"], // Old Main 1858, fire 1932, rebuilt 1937. Unconfirmed on site.
+    clues: [
+      "Think about when it rose, or when it rose again.",
+      "Look for it in stone. Four characters, no letters.",
+    ],
     photo: "Get the building's sign in the shot.",
     geo: { lat: 40.95673, lng: -76.88149, r: 50 }, // From OpenStreetMap. Confirm on site.
     game: "records",
@@ -167,7 +183,11 @@ export const GEMS = [
     hints: [
       "Just south of Roberts Hall, paid for by Andrew Carnegie in 1904.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1904", "1905"], // Cornerstone 1904, opened 1905. Unconfirmed on site.
+    clues: [
+      "When did the steel money show up?",
+      "Check the cornerstone. Four characters, no letters.",
+    ],
     photo: "Get the building's sign in the shot.",
     geo: { lat: 40.95622, lng: -76.88173, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "books",
@@ -192,7 +212,11 @@ export const GEMS = [
     hints: [
       "Bertrand Library's private study rooms. Be quiet; people are serving their sentences.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1951"], // Bertrand's cornerstone, 1951. Unconfirmed on site.
+    clues: [
+      "When did the new library lay its first stone?",
+      "Find the library's cornerstone. Four characters, no letters.",
+    ],
     photo: "Get the row of study rooms in the shot. Quietly.",
     geo: { lat: 40.9544, lng: -76.88261, r: 70 }, // From OpenStreetMap. Confirm on site.
     game: "lock",
@@ -217,7 +241,7 @@ export const GEMS = [
     hints: [
       "The Flying Bison food truck. On weekdays it's parked outside Hildreth-Mirza Hall, a minute from Bertrand.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: null, // A food truck: no fixed year to read. Check-in and photo only.
     photo: "Get the truck in the shot, or its spot if it's out.",
     geo: { lat: 40.95466, lng: -76.88212, r: 50 }, // From OpenStreetMap. Confirm on site.
     game: "orders",
@@ -242,7 +266,7 @@ export const GEMS = [
     hints: [
       "Malesardi Quadrangle. Bertrand Library stands at its east end.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: null, // The quad's plaques show only its name. Check-in and photo only.
     photo: "Get the lawn and the library behind it in the shot.",
     geo: { lat: 40.9547, lng: -76.8837, r: 70 }, // The lawn between Bertrand's front and Freas Hall; not mapped in OpenStreetMap. Confirm on site.
     game: "flame",
@@ -267,7 +291,11 @@ export const GEMS = [
     hints: [
       "The bison statue outside the Kenneth Langone Athletics & Recreation Center (KLARC).",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1975", "2017"], // Class of 1975 gift, installed 2017. Unconfirmed on site.
+    clues: [
+      "Who gave him to campus? Their class says it all.",
+      "Check his plaque. Four characters, no letters.",
+    ],
     photo: "Strike a pose with the big guy and get him in the shot.",
     geo: { lat: 40.95609, lng: -76.88792, r: 150 }, // The whole KLARC; the statue isn't mapped. Confirm on site.
     game: "herd",
@@ -292,7 +320,11 @@ export const GEMS = [
     hints: [
       "Rooke Chapel on Dent Drive, a short walk from the gates. Read the words carved on the outside.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1964"], // Dedicated 1964. Unconfirmed on site.
+    clues: [
+      "When did the services stop wandering?",
+      "Look near the carved question. Four characters, no letters.",
+    ],
     photo: "Get the carved question in the shot.",
     geo: { lat: 40.95461, lng: -76.88617, r: 50 }, // From OpenStreetMap. Confirm on site.
     game: "organ",
@@ -317,7 +349,11 @@ export const GEMS = [
     hints: [
       "The brick-and-iron gateway on Moore Avenue/Dent Drive, by the stadium.",
     ],
-    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    code: ["1928", "1898", "1901"], // Plaque: June 5, 1928; marker: 1898-1901 at Bucknell.
+    clues: [
+      "When did baseball give him this gateway?",
+      "Read the plaque on the gateway. Four characters, no letters.",
+    ],
     photo: "Get the gateway in the shot.",
     geo: { lat: 40.95333, lng: -76.88694, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "zone",
