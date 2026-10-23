@@ -2,8 +2,9 @@
 
 An 8-bit scavenger hunt around Bucknell. It starts with a call from Ray
 Bucknell, a pixel-art bison who's been on this hill longer than most of the
-bricks. Crack his riddles, find the cards he's hidden, and snap a photo at
-each stop to fill your page in his book.
+bricks. Crack his riddles (or beat his minigames for a bonus hint), find the
+cards he's hidden, and snap a photo at each stop to fill your page in his
+book.
 
 Built for the Bucknell App Makerspace **Hidden Gems: The Best of Bucknell**
 contest in October 2026. Open it on your phone; there's nothing to install

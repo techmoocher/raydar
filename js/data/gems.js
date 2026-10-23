@@ -24,6 +24,9 @@ export const GEMS = [
       "Built in 1849 and named for Stephen W. Taylor, who wrote the university's charter.",
       "It's the building the judges are standing in.",
     ],
+    // No game for the first stop: its bonus hint is free.
+    game: null,
+    bonusHint: "On the house: you might be standing in it right now. Step outside and look up. The first building on the hill is still the oldest one here.",
     code: "CHARTER",
     token: "k7q2",
     geo: null,
@@ -46,6 +49,8 @@ export const GEMS = [
   // Stubs: content not ported yet.
   {
     id: "bucknell", n: 2, act: 1, name: "Bucknell Hall", code: "GASKING", token: "gztn", stub: true,
+    game: "tank",
+    bonusHint: "It started out as a chapel, the first gift from the man this school is named after. These days, it's where the poets read, on Loomis Street.",
     cardBack: [
       "So.| About my name.",
       "Not long after this school opened, it was running on fumes. The money was gone, and closing was a real possibility.",
@@ -57,6 +62,8 @@ export const GEMS = [
   },
   {
     id: "hunt", n: 3, act: 2, name: "Hunt Hall", code: "PERFUME", token: "6w5p", stub: true,
+    game: "lights",
+    bonusHint: "It's a residence hall with a porch and steps out front. In 1933, those steps were the stage for Commencement. Look outside; don't go wandering the halls.",
     bonus: "In 1933, Hunt Hall's porch and steps were the stage for an outdoor Commencement. And Bucknell once ranked #5 on a list of the most haunted US campuses.",
     cardBack: [
       { text: "Okay, don't freak out.| This hall is haunted.", mood: "spooky" },
@@ -68,6 +75,8 @@ export const GEMS = [
   },
   {
     id: "oldart", n: 4, act: 2, name: "Old Art Building", code: "MILLRUN", token: "s3x4", stub: true,
+    game: "pipes",
+    bonusHint: "Find the creek on Walker Street and follow it. The building you want sits right on top of the water.",
     cardBack: [
       "Look down.| There's a creek under this building.",
       "It's called Miller Run, and somebody decided to build right on top of it. ~Bold choice.~",
@@ -79,6 +88,8 @@ export const GEMS = [
   },
   {
     id: "roberts", n: 5, act: 2, name: "Roberts Hall", code: "OLDMAIN", token: "v7ja", stub: true,
+    game: "records",
+    bonusHint: "Climb the hill. It's on the north side of the old quad, it's the oldest residence hall on campus, and it used to go by another name.",
     cardBack: [
       "August 1932.| A local kid walked through this building and watched the custodians polish the oiled wooden floors.",
       "The next morning, the fire alarm woke him up.",
@@ -90,6 +101,8 @@ export const GEMS = [
   },
   {
     id: "carnegie", n: 6, act: 2, name: "Carnegie Building", code: "CHUTES", token: "9f2j", stub: true,
+    game: "books",
+    bonusHint: "A 1904 building paid for with steel money, just south of the oldest residence hall on campus. Before Bertrand opened, this was the library.",
     cardBack: [
       "Before Bertrand, this was the library.",
       "Andrew Carnegie paid for it with steel money in 1904. It opened with no artificial lighting, so you read by the sun.",
@@ -101,6 +114,8 @@ export const GEMS = [
   },
   {
     id: "cells", n: 7, act: 2, name: "The Cells", code: "PAROLE", token: "rytx", stub: true,
+    game: "lock",
+    bonusHint: "Go inside Bertrand Library and look for the row of private study rooms that thesis writers book during finals. Keep your voice down.",
     bonus: "On Christmas Eve 1960, the library's roof and clock tower caught fire. Not one book was lost.",
     cardBack: [
       "Welcome to the cell block.| Keep it down. People are serving their sentences.",
@@ -112,6 +127,8 @@ export const GEMS = [
   },
   {
     id: "flyson", n: 8, act: 3, name: "The Flyson", code: "NACHOTOTS", token: "n9b7", stub: true,
+    game: "orders",
+    bonusHint: "On weekdays, it parks outside Hildreth-Mirza Hall, about a minute from Bertrand. Late at night, just look for the line.",
     cardBack: [
       "If you've been here at midnight, you already know.| The line wraps around, and everyone's there for the nacho tots.",
       "The Flying Bison is a food truck: a bison that flies but never leaves the ground. ~Relatable.~",
@@ -123,6 +140,8 @@ export const GEMS = [
   },
   {
     id: "malesardi", n: 9, act: 3, name: "Malesardi Quad", code: "CANDLE", token: "j7xj", stub: true,
+    game: "flame",
+    bonusHint: "It's a big lawn with Bertrand Library standing at its east end. Every class gathers here at convocation and comes back for Commencement.",
     cardBack: [
       "This lawn sees every class twice.",
       "The first time, you're a first-year at convocation, holding a candle and trying not to drip wax on your shoes.",
@@ -134,6 +153,8 @@ export const GEMS = [
   },
   {
     id: "bucky", n: 10, act: 3, name: "Bucky (KLARC)", code: "NOBULL", token: "9v5x", stub: true,
+    game: "herd",
+    bonusHint: "Head for the Kenneth Langone Athletics & Recreation Center. The one you want is right outside: 1,500 pounds, eight feet tall, never skips a workout.",
     cardBack: [
       "Meet the big guy.| Fifteen hundred pounds, eight feet tall, and he never skips a day at the gym.",
       "Bison have been in this family a long time. In 1946, there was a live one.",
@@ -145,6 +166,8 @@ export const GEMS = [
   },
   {
     id: "rooke", n: 11, act: 4, name: "Rooke Chapel", code: "MICAH", token: "2f5c", stub: true,
+    game: "organ",
+    bonusHint: "It's on Dent Drive, a short walk from the gates by the stadium. Look for the building with a question carved into its wall.",
     bonus: "Rooke lived to 103. For his 100th birthday, his grandchildren added trumpet pipes to the organ. It has 3,288 pipes in all.",
     cardBack: [
       { text: "Before 1964, services here wandered from Bucknell Hall to churches in town to a theatre stage.", mood: "wistful" },
@@ -156,6 +179,8 @@ export const GEMS = [
   },
   {
     id: "gates", n: 12, act: 4, name: "Mathewson Gates", code: "BIGSIX", token: "4jzx", stub: true,
+    game: "zone",
+    bonusHint: "Head toward the stadium, near Moore Avenue and Dent Drive. It's a brick-and-iron gateway, and every senior walks out through it.",
     cardBack: [
       "Every first-year walks in through these gates. Every senior walks out.",
       "They're named for Christy Mathewson, Big Six, a Bucknell student before he became one of baseball's greatest pitchers.",

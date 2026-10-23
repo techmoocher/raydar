@@ -24,8 +24,10 @@ export function gemScreen(id) {
           }
         </div>
         <div class="hints" aria-live="polite"></div>
+        <div class="bonus-slot" aria-live="polite"></div>
         <div class="gem__actions">
           ${g.stub ? "" : `<button class="btn btn--gold" type="button" data-act="hint">HINT</button>`}
+          ${g.stub || !g.bonusHint ? "" : `<button class="btn btn--gem" type="button" data-act="bonus">BONUS</button>`}
           <button class="btn btn--big" type="button" data-act="found" ${g.stub ? "disabled" : ""}>I FOUND IT!</button>
           <button class="btn btn--blue" type="button" data-act="map">MAP</button>
         </div>
@@ -58,6 +60,25 @@ export function gemScreen(id) {
       s.hints = { ...s.hints, [g.id]: hintsShown };
     });
   });
+  // The bonus hint: free on the first stop, earned in the stop's game everywhere else.
+  const bonusBtn = screen.querySelector("[data-act=bonus]");
+  const showBonus = () => {
+    screen.querySelector(".bonus-slot").replaceChildren(
+      el(`<p class="hint hint--bonus px-box"><span class="pixel">BONUS HINT</span> ${esc(g.bonusHint)}</p>`)
+    );
+    bonusBtn?.remove();
+  };
+  if (bonusBtn && p().bonus?.[g.id]) showBonus();
+  bonusBtn?.addEventListener("click", async () => {
+    sfx.select();
+    if (g.game) return go(`#/bonus/${g.id}`);
+    await store.update((s) => {
+      s.bonus = { ...s.bonus, [g.id]: true };
+    });
+    showBonus();
+    say("This one's on the house.| ~First stop, first freebie.~");
+  });
+
   screen.querySelector("[data-act=found]").addEventListener("click", () => {
     sfx.select();
     go(`#/proof/${g.id}`);
@@ -75,6 +96,7 @@ export function gemScreen(id) {
         "Every gem starts with one of my riddles. Crack it, then go find the place.",
         "Stuck? Tap *HINT*.| Still stuck? Tap it again.| ~I won't tell anyone.~",
         "Once you're standing right there, hit *I FOUND IT!*",
+        "And *BONUS* has one more hint.| ~Usually, you'll have to earn it.~",
       ]);
       if (!screen.isConnected) return;
       await store.update((s) => {

@@ -57,6 +57,7 @@ const SCREEN_MUSIC = {
   intro: "title",
   map: "overworld",
   gem: "riddle",
+  bonus: "riddle",
   proof: "riddle",
   get: "overworld",
   book: "overworld",

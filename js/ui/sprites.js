@@ -341,3 +341,77 @@ export function caller(size = 96) {
 export function icon(name, size = 18) {
   return gridToSvg(ICONS[name], size, "");
 }
+
+// Small pieces for the bonus-hint games.
+const MINI = {
+  calf: [
+    "w......w",
+    ".wFFFFw.",
+    "FFFFFFFF",
+    "FkFFFFkF",
+    "FFFLLFFF",
+    ".FFDDFF.",
+    "..F..F..",
+  ],
+  flame: [
+    "..o...",
+    "..oo..",
+    ".oyo..",
+    ".oyyo.",
+    ".oypo.",
+    "..kk..",
+    ".pppp.",
+    ".pppp.",
+    ".pppp.",
+    ".pppp.",
+  ],
+  wick: [
+    "......",
+    "......",
+    "......",
+    "......",
+    "......",
+    "..kk..",
+    ".pppp.",
+    ".pppp.",
+    ".pppp.",
+    ".pppp.",
+  ],
+  ball: [
+    "..kkk..",
+    ".kprpk.",
+    "kprpprk",
+    "kpppppk",
+    "kprpprk",
+    ".kprpk.",
+    "..kkk..",
+  ],
+  mitt: [
+    ".DDDD...",
+    "DFFFFD..",
+    "DFLLFFD.",
+    "DFLLLFFD",
+    "DFLLLFFD",
+    "DFFFFFFD",
+    ".DFFFFD.",
+    "..DDDD..",
+  ],
+  up: [
+    "..p..",
+    ".ppp.",
+    "p.p.p",
+    "..p..",
+    "..p..",
+  ],
+  upright: [
+    ".pppp",
+    "...pp",
+    "..p.p",
+    ".p..p",
+    "p....",
+  ],
+};
+
+export function mini(name, size = 24) {
+  return gridToSvg(MINI[name], size, "");
+}

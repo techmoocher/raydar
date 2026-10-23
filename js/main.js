@@ -8,6 +8,7 @@ import { callScreen } from "./screens/call.js";
 import { introScreen } from "./screens/intro.js";
 import { mapScreen } from "./screens/map.js";
 import { gemScreen } from "./screens/gem.js";
+import { bonusScreen } from "./screens/bonus.js";
 import { proofScreen } from "./screens/proof.js";
 import { getScreen } from "./screens/get.js";
 import { bookScreen } from "./screens/book.js";
@@ -22,6 +23,7 @@ const routes = [
   [/^#\/intro$/, introScreen],
   [/^#\/map$/, needsSave(mapScreen)],
   [/^#\/gem\/([a-z]+)$/, needsSave(gemScreen)],
+  [/^#\/bonus\/([a-z]+)$/, needsSave(bonusScreen)],
   [/^#\/proof\/([a-z]+)$/, needsSave(proofScreen)],
   [/^#\/get\/([a-z]+)$/, needsSave(getScreen)],
   [/^#\/book$/, needsSave(bookScreen)],
