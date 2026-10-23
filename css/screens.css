@@ -870,6 +870,48 @@
   object-fit: cover;
 }
 
+/* SHOW ME THE CARD: Ray's card drawn on screen as a last way out. */
+.shown-card {
+  margin: var(--s3) 0 0;
+  text-align: center;
+}
+
+.shown-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  margin-bottom: var(--s3);
+  font-size: 10px;
+}
+
+.shown-card__head .sprite {
+  width: 32px;
+  height: 32px;
+}
+
+.shown-card__label {
+  margin-bottom: var(--s2);
+  font-size: var(--fs-pixel-s);
+  color: var(--blue);
+}
+
+.shown-card__answer {
+  margin-bottom: var(--s2);
+  font-size: var(--fs-pixel-xl);
+}
+
+.shown-card__where {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+[data-act="show-card"] {
+  width: 100%;
+  margin-top: var(--s3);
+}
+
 /* Aim here: a gold square where the code should sit. */
 .scanner__frame {
   position: absolute;

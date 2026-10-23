@@ -14,6 +14,9 @@ import { loadImage, toKeepsake } from "../hunt/photo.js";
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Wrong numbers (after every clue) before Ray offers to show his card.
+const WRONG_BEFORE_CARD = 3;
+
 const BLOCKED_HELP = `${LOCATION_HELP}<br>Then come back and tap <b>TRY AGAIN</b>.`;
 
 // Three steps, in order:
@@ -29,6 +32,7 @@ export function proofScreen(id) {
   let method = null; // how the stop was proven: "qr", "code" or "gps"
   let photo = null; // { img }
   let cluesShown = 0;
+  let wrongTries = 0;
   let stopScan = null;
   const clues = g.clues || [];
   const warned = new Set(); // cards Ray already commented on during a live scan
@@ -318,6 +322,7 @@ export function proofScreen(id) {
       cluesShown++;
       clueBtn.textContent = cluesShown < clues.length ? "BIGGER CLUE" : "NO MORE CLUES";
       clueBtn.disabled = cluesShown >= clues.length;
+      maybeOfferCard();
     });
 
     form.addEventListener("submit", (e) => {
@@ -325,6 +330,7 @@ export function proofScreen(id) {
       const typed = field.value;
       if (!typed.trim()) return;
       if (card.codeOk(g, typed)) return proved("code", "Number checks out.");
+      wrongTries++;
       sfx.error();
       field.classList.remove("is-wrong");
       void field.offsetWidth; // restart the shake
@@ -334,13 +340,41 @@ export function proofScreen(id) {
         say(`That's my number for ${lit(gemLabel(owner))}.| Wrong stop, right idea!`);
       } else if (clues.length && cluesShown < clues.length) {
         say("Not quite.| Stuck? Tap *CLUE*.");
-      } else {
+      } else if (!maybeOfferCard()) {
         say("Still not it.| Look around one more time. Spaces don't count.");
       }
     });
   }
 
-  function proved(how, note) {
+  // The last way out: every clue used and a few wrong tries. GPS already
+  // proved they're here, so Ray shows his card on screen and the stop counts.
+  function maybeOfferCard() {
+    if (cluesShown < clues.length || wrongTries < WRONG_BEFORE_CARD) return false;
+    if (codeSlot.querySelector("[data-act=show-card]")) return true;
+    const offer = el(`<button class="btn btn--gold" type="button" data-act="show-card">SHOW ME THE CARD</button>`);
+    offer.addEventListener("click", showCard);
+    codeSlot.appendChild(offer);
+    say("Still stuck?| I'll show you my card.| ~Just this once.~");
+    return true;
+  }
+
+  function showCard() {
+    sfx.select();
+    const answer = [].concat(g.code)[0];
+    prove.querySelector(".step__actions").after(
+      el(`
+        <div class="shown-card px-box px-box--paper">
+          <p class="shown-card__head pixel"><span aria-hidden="true">${ray(32, "happy")}</span>RAY'S CARD · GEM ${pad2(g.n)}/${GEMS.length}</p>
+          <p class="shown-card__label pixel">THE NUMBER</p>
+          <p class="shown-card__answer pixel">${esc(answer)}</p>
+          ${clues.length ? `<p class="shown-card__where">${esc(clues[clues.length - 1])}</p>` : ""}
+        </div>
+      `)
+    );
+    proved("shown", "Ray showed you his card.", "There you go.| Now get a photo with the building. That one's for the book.");
+  }
+
+  function proved(how, note, line = "That's the one.| Now get a photo with the building. That one's for the book.") {
     if (method) return;
     method = how;
     endScan();
@@ -348,7 +382,7 @@ export function proofScreen(id) {
     done(prove, note);
     prove.querySelector(".step__actions").remove();
     codeSlot.remove();
-    toPhoto("That's the one.| Now get a photo with the building. That one's for the book.");
+    toPhoto(line);
   }
 
   // ---------- Step 3: the photo for the book ----------
