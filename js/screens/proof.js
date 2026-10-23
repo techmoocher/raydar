@@ -196,7 +196,15 @@ export function proofScreen(id) {
           ? `Ha, that's my card for ${lit(other.name)}.| You already have that one!`
           : `Wait...| that's my card for ${lit(gemLabel(other))}, not this one.| I'll remember it for that stop.`
       );
-    } else if (!codeSlot.firstChild) {
+    }
+    if (!screen.isConnected) return;
+    // No password set for this stop yet: the check-in and the photo are enough.
+    if (!card.hasCode(g)) {
+      await say("Nice shot.| That's all I need here.");
+      if (screen.isConnected) unlock("photo");
+      return;
+    }
+    if (!hit && !codeSlot.firstChild) {
       await say([
         "Nice shot.| Now for my password.",
         "Every stop has one, hiding in plain sight.| ~Look at the place, not your phone.~",

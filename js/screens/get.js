@@ -47,8 +47,10 @@ export function getScreen(id) {
 
   later(screen, async () => {
     if (!screen.isConnected) return;
-    await say(g.memory);
-    if (!screen.isConnected) return;
+    if (g.memory?.length) {
+      await say(g.memory);
+      if (!screen.isConnected) return;
+    }
     if (g.bonus) {
       await say(g.bonus, { name: "BONUS FACT" });
       if (!screen.isConnected) return;

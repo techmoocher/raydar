@@ -9,8 +9,9 @@ Built for the Bucknell App Makerspace **Hidden Gems: The Best of Bucknell**
 contest in October 2026. Open it on your phone; there's nothing to install
 and no account to create.
 
-**Current demo:** Taylor Hall is playable. The other eleven stops are
-placeholders while the rest of the hunt comes together.
+**Current state:** all twelve stops are playable. Only Taylor Hall has Ray's
+password so far; the other stops finish with the check-in and the photo until
+their passwords are confirmed on site.
 
 ## How a stop works
 

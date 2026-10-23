@@ -61,7 +61,7 @@ export function bookScreen() {
     open.appendChild(fig);
     open.addEventListener("click", () => {
       sfx.select();
-      say([...g.memory, ...cardBackLines(g).map((l) => ({ ...l, name: "CARD BACK" }))]);
+      say([...(g.memory || []), ...cardBackLines(g).map((l) => ({ ...l, name: "CARD BACK" }))]);
     });
     grid.appendChild(open);
     store.getPhoto(g.id).then((blob) => {

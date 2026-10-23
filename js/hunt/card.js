@@ -56,7 +56,9 @@ const norm = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
 // A stop can accept more than one password when several years are on show.
 const answers = (gem) => [].concat(gem.code || []).map(norm).filter(Boolean);
 
-export const codeOk = (gem, typed) => Boolean(norm(typed)) && answers(gem).includes(norm(typed));
+export const hasCode = (gem) => answers(gem).length > 0;
+
+export const codeOk =(gem, typed) => Boolean(norm(typed)) && answers(gem).includes(norm(typed));
 
 export const codeOwner = (typed, gems) => gems.find((g) => codeOk(g, typed));
 

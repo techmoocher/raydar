@@ -55,9 +55,21 @@ export const GEMS = [
     ],
   },
 
-  // Stubs: content not ported yet. Each still needs its password, clues, photo and geo.
+  // Ported from GAME-PLAN. Memories aren't written yet; the card back tells each story.
   {
-    id: "bucknell", n: 2, act: 1, name: "Bucknell Hall", code: null, token: "gztn", stub: true,
+    id: "bucknell", n: 2, act: 1, name: "Bucknell Hall", token: "gztn",
+    riddle: [
+      "The school was running on fumes till the Gas King filled it up.",
+      "Fifty thousand bucks. Now you know where we got the \"Buck.\"",
+      "His first gift was a chapel. Now the poets spit bars.",
+      "Find the hall wearing his name, where the verses are the stars.",
+    ],
+    hints: [
+      "On Loomis Street, home of the Stadler Center for Poetry & Literary Arts.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the building's sign in the shot.",
+    geo: { lat: 40.95876, lng: -76.88251, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "tank",
     bonusHint: "It started out as a chapel, the first gift from the man this school is named after. These days, it's where the poets read, on Loomis Street.",
     cardBack: [
@@ -70,7 +82,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "hunt", n: 3, act: 2, name: "Hunt Hall", code: null, token: "6w5p", stub: true,
+    id: "hunt", n: 3, act: 2, name: "Hunt Hall", token: "6w5p",
+    riddle: [
+      "You're on a hunt, so it's only right you pull up to Hunt.",
+      "Lights cut out, tools go missing. Custodians say it's no stunt.",
+      "There's perfume in the hallway when nobody's there.",
+      "Spooky season. Find the haunted hall, if you dare.",
+    ],
+    hints: [
+      "A residence hall just west of Bucknell Hall. Look for the porch and steps.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the porch and steps in the shot.",
+    geo: { lat: 40.9589, lng: -76.88349, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "lights",
     bonusHint: "It's a residence hall with a porch and steps out front. In 1933, those steps were the stage for Commencement. Look outside; don't go wandering the halls.",
     bonus: "In 1933, Hunt Hall's porch and steps were the stage for an outdoor Commencement. And Bucknell once ranked #5 on a list of the most haunted US campuses.",
@@ -83,7 +107,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "oldart", n: 4, act: 2, name: "Old Art Building", code: null, token: "s3x4", stub: true,
+    id: "oldart", n: 4, act: 2, name: "Old Art Building", token: "s3x4",
+    riddle: [
+      "Built on top of Miller Run, I've been going with the flow.",
+      "Chem kids joked their waste had a shortcut down below.",
+      "Then the creek rose up, and I turned into a dam.",
+      "The music took a hit. Now tell me who I am.",
+    ],
+    hints: [
+      "The old Art Building on Walker Street, where it bridges Miller Run.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the creek and the building over it in the shot.",
+    geo: { lat: 40.95811, lng: -76.88379, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "pipes",
     bonusHint: "Find the creek on Walker Street and follow it. The building you want sits right on top of the water.",
     cardBack: [
@@ -96,7 +132,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "roberts", n: 5, act: 2, name: "Roberts Hall", code: null, token: "v7ja", stub: true,
+    id: "roberts", n: 5, act: 2, name: "Roberts Hall", token: "v7ja",
+    riddle: [
+      "August '32, the place got a little too lit:",
+      "fire took my middle, and my records went with it.",
+      "Rebuilt with a new name, but the old one still remains.",
+      "Climb the hill and find the dorm that used to be Old Main.",
+    ],
+    hints: [
+      "The oldest residence hall on campus, on the north side of the old quad, renamed for trustee Daniel C. Roberts.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the building's sign in the shot.",
+    geo: { lat: 40.95673, lng: -76.88149, r: 50 }, // From OpenStreetMap. Confirm on site.
     game: "records",
     bonusHint: "Climb the hill. It's on the north side of the old quad, it's the oldest residence hall on campus, and it used to go by another name.",
     cardBack: [
@@ -109,7 +157,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "carnegie", n: 6, act: 2, name: "Carnegie Building", code: null, token: "9f2j", stub: true,
+    id: "carnegie", n: 6, act: 2, name: "Carnegie Building", token: "9f2j",
+    riddle: [
+      "Steel money built me, and the sun was my only light.",
+      "They slid my books down wooden chutes when the new kid took the mic.",
+      "They almost tore me down for a lawn. Now they call me a gem.",
+      "Find the library before the library. Hidden gem? I'm one of them.",
+    ],
+    hints: [
+      "Just south of Roberts Hall, paid for by Andrew Carnegie in 1904.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the building's sign in the shot.",
+    geo: { lat: 40.95622, lng: -76.88173, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "books",
     bonusHint: "A 1904 building paid for with steel money, just south of the oldest residence hall on campus. Before Bertrand opened, this was the library.",
     cardBack: [
@@ -122,7 +182,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "cells", n: 7, act: 2, name: "The Cells", code: null, token: "rytx", stub: true,
+    id: "cells", n: 7, act: 2, name: "The Cells", token: "rytx",
+    riddle: [
+      "Row of cells in the library where thesis writers get booked.",
+      "They're serving sentences, the written kind, and they're hooked.",
+      "Finals week it's a full house. Nobody's making parole.",
+      "Find the cell block. Shh. Keep the volume on low.",
+    ],
+    hints: [
+      "Bertrand Library's private study rooms. Be quiet; people are serving their sentences.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the row of study rooms in the shot. Quietly.",
+    geo: { lat: 40.9544, lng: -76.88261, r: 70 }, // From OpenStreetMap. Confirm on site.
     game: "lock",
     bonusHint: "Go inside Bertrand Library and look for the row of private study rooms that thesis writers book during finals. Keep your voice down.",
     bonus: "On Christmas Eve 1960, the library's roof and clock tower caught fire. Not one book was lost.",
@@ -135,7 +207,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "flyson", n: 8, act: 3, name: "The Flyson", code: null, token: "n9b7", stub: true,
+    id: "flyson", n: 8, act: 3, name: "The Flyson", token: "n9b7",
+    riddle: [
+      "I'm a bison that flies, but I never leave the ground.",
+      "Midnight nacho tots, and the line wraps all around.",
+      "Weekdays I'm parked out, pouring coffee by the books.",
+      "Find the bison that can fly. It's not as hard as it looks.",
+    ],
+    hints: [
+      "The Flying Bison food truck. On weekdays it's parked outside Hildreth-Mirza Hall, a minute from Bertrand.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the truck in the shot, or its spot if it's out.",
+    geo: { lat: 40.95466, lng: -76.88212, r: 50 }, // From OpenStreetMap. Confirm on site.
     game: "orders",
     bonusHint: "On weekdays, it parks outside Hildreth-Mirza Hall, about a minute from Bertrand. Late at night, just look for the line.",
     cardBack: [
@@ -148,7 +232,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "malesardi", n: 9, act: 3, name: "Malesardi Quad", code: null, token: "j7xj", stub: true,
+    id: "malesardi", n: 9, act: 3, name: "Malesardi Quad", token: "j7xj",
+    riddle: [
+      "First-years light their candles here before day one;",
+      "four years later, caps and gowns, sitting in the sun.",
+      "They call the ending \"Commencement,\" and that word means \"start.\"",
+      "Find the lawn where every class begins: the campus heart.",
+    ],
+    hints: [
+      "Malesardi Quadrangle. Bertrand Library stands at its east end.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the lawn and the library behind it in the shot.",
+    geo: { lat: 40.9547, lng: -76.8837, r: 70 }, // The lawn between Bertrand's front and Freas Hall; not mapped in OpenStreetMap. Confirm on site.
     game: "flame",
     bonusHint: "It's a big lawn with Bertrand Library standing at its east end. Every class gathers here at convocation and comes back for Commencement.",
     cardBack: [
@@ -161,7 +257,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "bucky", n: 10, act: 3, name: "Bucky (KLARC)", code: null, token: "9v5x", stub: true,
+    id: "bucky", n: 10, act: 3, name: "Bucky (KLARC)", token: "9v5x",
+    riddle: [
+      "Fifteen hundred pounds, eight feet tall. No bull.",
+      "Posted at the gym 24/7, never skipping pull.",
+      "You've heard of the herd? I'm the biggest you'll see.",
+      "Strike a pose with the big guy. Your photo needs me.",
+    ],
+    hints: [
+      "The bison statue outside the Kenneth Langone Athletics & Recreation Center (KLARC).",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Strike a pose with the big guy and get him in the shot.",
+    geo: { lat: 40.95609, lng: -76.88792, r: 150 }, // The whole KLARC; the statue isn't mapped. Confirm on site.
     game: "herd",
     bonusHint: "Head for the Kenneth Langone Athletics & Recreation Center. The one you want is right outside: 1,500 pounds, eight feet tall, never skips a workout.",
     cardBack: [
@@ -174,7 +282,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "rooke", n: 11, act: 4, name: "Rooke Chapel", code: null, token: "2f5c", stub: true,
+    id: "rooke", n: 11, act: 4, name: "Rooke Chapel", token: "2f5c",
+    riddle: [
+      "Most buildings flex their names in stone. I carved a question instead.",
+      "Thirty-two eighty-eight pipes. Yeah, I've got pipes, 'nuff said.",
+      "Skip me and that's a Rooke-ie mistake this close to the end.",
+      "Find the chapel asking a question, and answer it, friend.",
+    ],
+    hints: [
+      "Rooke Chapel on Dent Drive, a short walk from the gates. Read the words carved on the outside.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the carved question in the shot.",
+    geo: { lat: 40.95461, lng: -76.88617, r: 50 }, // From OpenStreetMap. Confirm on site.
     game: "organ",
     bonusHint: "It's on Dent Drive, a short walk from the gates by the stadium. Look for the building with a question carved into its wall.",
     bonus: "Rooke lived to 103. For his 100th birthday, his grandchildren added trumpet pipes to the organ. It has 3,288 pipes in all.",
@@ -187,7 +307,19 @@ export const GEMS = [
     ],
   },
   {
-    id: "gates", n: 12, act: 4, name: "Mathewson Gates", code: null, token: "4jzx", stub: true,
+    id: "gates", n: 12, act: 4, name: "Mathewson Gates", token: "4jzx",
+    riddle: [
+      "Every first-year walks in through me. Every senior walks out.",
+      "Baseball built me for Big Six, the arm the whole league talked about.",
+      "His best pitch was the fadeaway, but you're not fading yet.",
+      "Walk through one last time. The last bar's the one you won't forget.",
+    ],
+    hints: [
+      "The brick-and-iron gateway on Moore Avenue/Dent Drive, by the stadium.",
+    ],
+    code: null, // TODO: a year shown at the stop. Until then, no password step.
+    photo: "Get the gateway in the shot.",
+    geo: { lat: 40.95333, lng: -76.88694, r: 40 }, // From OpenStreetMap. Confirm on site.
     game: "zone",
     bonusHint: "Head toward the stadium, near Moore Avenue and Dent Drive. It's a brick-and-iron gateway, and every senior walks out through it.",
     cardBack: [
