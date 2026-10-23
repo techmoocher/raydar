@@ -25,7 +25,6 @@ export function mapScreen() {
   let y = 16;
   let lastAct = null;
   const items = [];
-  const points = [];
   GEMS.forEach((g, i) => {
     if (g.act !== lastAct) {
       items.push({ type: "banner", act: g.act, y });
@@ -34,19 +33,12 @@ export function mapScreen() {
     }
     const x = XS[i % XS.length];
     items.push({ type: "node", g, x, y });
-    points.push([x, y + 28]);
     y += ROW;
   });
   const height = y + 24;
 
-  const path = points.map(([x, py]) => `${x},${py}`).join(" ");
-  const world = el(`
-    <div class="map__world" style="height:${height}px">
-      <svg class="map__path" viewBox="0 0 100 ${height}" preserveAspectRatio="none" aria-hidden="true">
-        <polyline points="${path}" />
-      </svg>
-    </div>
-  `);
+  // No trail through every gem: the order is free. Only Ray's hop to his pick is drawn.
+  const world = el(`<div class="map__world" style="height:${height}px"></div>`);
 
   items.forEach((it) => {
     if (it.type === "banner") {
@@ -76,6 +68,15 @@ export function mapScreen() {
   const nodes = items.filter((it) => it.type === "node");
   const target = nodes.find((it) => it.g.id === cur?.id) || nodes[nodes.length - 1];
   const start = nodes.find((it) => it.g.id === lastFound()?.id) || target;
+  if (start !== target) {
+    world.prepend(
+      el(`
+        <svg class="map__path" viewBox="0 0 100 ${height}" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="${start.x},${start.y + 28} ${target.x},${target.y + 28}" />
+        </svg>
+      `)
+    );
+  }
   const spot = (it) => ({ left: `calc(${it.x}% - 82px)`, top: `${it.y + 10}px` });
   const runner = el(`<div class="runner" aria-hidden="true">${rayRun(44)}</div>`);
   Object.assign(runner.style, spot(start));
@@ -99,7 +100,7 @@ export function mapScreen() {
       ${
         cur
           ? `<button class="btn btn--big dock__go" type="button" data-act="go">
-               <span class="dock__go-n">GEM ${pad2(cur.n)}/${GEMS.length}</span>
+               <span class="dock__go-n">RAY'S PICK · GEM ${pad2(cur.n)}/${GEMS.length}</span>
                <span>READ RAY'S RIDDLE</span>
              </button>`
           : ""
@@ -126,9 +127,9 @@ export function mapScreen() {
     later(screen, async () => {
       if (!screen.isConnected) return;
       await say([
-        "This is my map.| Twelve gems, one trail across campus.",
+        "This is my map.| Twelve gems, all over campus.",
         "The orange spot is my pick for next.| Where is it, exactly?| ~That's the fun part.~",
-        "The trail's just a suggestion, though.| Tap any gem, in any order.",
+        "No set route, though.| Tap any gem, in any order.",
         "Or tap *READ RAY'S RIDDLE* for mine.",
       ]);
       store.update((s) => {

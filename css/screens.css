@@ -456,7 +456,7 @@
 
 .map__path polyline {
   fill: none;
-  stroke: var(--paper);
+  stroke: var(--orange);
   stroke-width: 8;
   stroke-dasharray: 8 8;
   vector-effect: non-scaling-stroke;
@@ -541,13 +541,14 @@
   text-shadow: 2px 2px 0 var(--ink);
 }
 
+/* Open, not locked: blue like a button, so it reads as tappable. */
 .node--open .node__pad {
-  background: var(--stone);
-  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--paper);
+  background: var(--blue);
+  box-shadow: 0 0 0 var(--px) var(--ink), inset 0 var(--px) 0 var(--blue-hi);
 }
 
-.node--open .node__label {
-  color: var(--stone);
+.node--open .node__n {
+  color: var(--paper);
 }
 
 .runner {
