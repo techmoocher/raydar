@@ -2,7 +2,7 @@ import { rayRun, gem as gemSprite } from "../ui/sprites.js";
 import { say } from "../ui/dialogue.js";
 import { el, esc, pad2, reducedMotion } from "../ui/dom.js";
 import { meadow } from "../ui/scenery.js";
-import { hud, saveNote } from "../ui/hud.js";
+import { hud, saveNote, locationNote } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
 import { GEMS, ACTS } from "../data/gems.js";
 import * as store from "../core/store.js";
@@ -91,6 +91,7 @@ export function mapScreen() {
   const body = el(`<div class="map__body"></div>`);
   body.appendChild(world);
   body.insertAdjacentHTML("beforeend", saveNote());
+  locationNote(body);
   screen.appendChild(body);
 
   const dock = el(`

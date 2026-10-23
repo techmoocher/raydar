@@ -1,7 +1,7 @@
 import { ray } from "../ui/sprites.js";
 import { say, lit } from "../ui/dialogue.js";
 import { el, esc, pad2 } from "../ui/dom.js";
-import { hud } from "../ui/hud.js";
+import { hud, LOCATION_HELP } from "../ui/hud.js";
 import { sfx } from "../audio/sfx.js";
 import { GEMS, byId } from "../data/gems.js";
 import * as store from "../core/store.js";
@@ -14,10 +14,7 @@ import { loadImage, toKeepsake } from "../hunt/photo.js";
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const BLOCKED_HELP = `
-  <b>iPhone:</b> Settings → Privacy &amp; Security → Location Services → Safari Websites → While Using the App.<br>
-  <b>Android:</b> tap the icon left of the address bar → Permissions → Location → Allow.<br>
-  Then come back and tap <b>TRY AGAIN</b>.`;
+const BLOCKED_HELP = `${LOCATION_HELP}<br>Then come back and tap <b>TRY AGAIN</b>.`;
 
 // Three steps: check in by GPS, photo with the sign, then Ray's password.
 // Ray's card is optional: a QR in the photo (or a card link) skips the password.

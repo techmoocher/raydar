@@ -14,7 +14,8 @@ placeholders while the rest of the hunt comes together.
 
 ## How a stop works
 
-1. **Check in.** The phone's location has to put you at the stop.
+1. **Check in.** The phone's location has to put you at the stop, so keep
+   location on for the whole hunt. Ray reminds you during his call.
 2. **Photo.** Snap the sign with the building's name. It goes on your page
    in Ray's book. Ray looks it over and stamps it **APPROVED**, but that's
    just for fun: the photo itself isn't checked.

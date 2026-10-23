@@ -108,8 +108,8 @@ export function gemScreen(id) {
       if (geo.choice() === null) {
         const yes = await say(
           [
-            "Quick question.| Mind if I peek at your location?",
-            "I'll show signal bars up top. The more bars, the warmer you are.| That's all I use it for, promise.",
+            "Quick question.| Want signal bars up top?",
+            "The more bars, the warmer you are.| ~Same location I use for check-ins. Nothing leaves your phone.~",
           ],
           {
             choices: [
@@ -120,6 +120,7 @@ export function gemScreen(id) {
         );
         geo.setChoice(yes ? "yes" : "no");
         if (yes && screen.isConnected) startBars();
+        else if (screen.isConnected) say("No bars, then.| You'll still need location on to check in, though.");
       }
     }
   }, 300);
